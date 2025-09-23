@@ -1,0 +1,45 @@
+## 1 ##
+INSERT INTO review (user_id, store_id, star, content)
+VALUES (1, 1, 5, '음 너무 맛있어요...');
+######
+
+## 2 ##
+SELECT u.id, u.name, u.email, u.phone_num, u.point
+FROM user AS u
+WHERE u.id = :user_id
+######
+
+## 3 ##
+SELECT 
+  m.point, 
+  m.contnet
+FROM user_mission AS um
+JOIN mission AS m
+ON um.mission_id = m.id
+WHERE um.user_id = :user_id
+  AND um.is_complete = True
+ORDER BY um.cmplete_at DESC
+LIMIT 15;
+######
+
+## 4 ##
+SELECT
+  m.content
+  s.name
+  fc.name
+  m.deadline
+  m.point
+FROM user_mission AS um
+JOIN mssion AS m 
+ON um.mission_id = m.id
+JOIN store AS s
+ON m.store_id = s.id
+JOIN food_category AS fc
+ON s.category_id = fc.id
+WHERE
+  um.is_complete = false AND
+  s.addr = '안암동' AND
+  um.user_id = :user_id
+ORDER BY um.complete_at DESC
+LIMIT 15;
+######
