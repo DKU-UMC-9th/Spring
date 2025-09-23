@@ -1,0 +1,47 @@
+#1
+INSERT INTO review (user_id, restaurant_id, star, content, created_at, updated_at)
+VALUES(1, #user_id가 1일 경우
+			 1, #restaurant_id가 1일 경우
+			 5, 
+			 '음 너무 맛있어요..',
+			 '2022.05.14',
+			 '2022.05.14'
+			 );
+
+
+#2
+SELECT 
+	nickname, 
+	email, 
+	phone_number, 
+	point
+FROM user
+WHERE user_id = ?
+
+
+#3
+#진행중
+SELECT 
+  m.mission_id,
+	m.content, 
+	m.point
+FROM mission AS m
+JOIN user_mission AS um
+ON m.mission_id = um.mission_id
+WHERE um.user_id = ?
+	AND um.is_complete = false #진행완료 true
+	AND m.missionId < ? #마지막으로 조회한 ID
+ORDER BY m.mission_id DESC
+LIMIT 15;
+
+
+#4
+SELECT *
+FROM mission AS m
+LEFT JOIN restaurants AS rs ON m.restaurant_id = r.restaurant_id
+LEFT JOIN region AS rg ON rg.region_id = rs.region_id
+WHERE rg.name = '안암동'
+	AND m.expired_at >= CURDATE() #오늘 날짜
+	AND m.missionId < ? #마지막으로 조회한 ID
+ORDER BY m.mission_id DESC
+LIMIT 15;
