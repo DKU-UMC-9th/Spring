@@ -1,0 +1,16 @@
+#진행중
+select 
+	m.mission_id,
+	m.point,
+	m.content,
+	um.is_complete
+from mission as m
+join user_mission as um
+on m.mission_id = um.mission_id
+where um.user_id = ?
+	and um.is_complete = false #진행 완료는 true
+	and (m.point < ? 
+			or (m.point = ? and m.created_at < ?)
+			) 
+order by m.point desc, m.created_at desc
+limit 15;
