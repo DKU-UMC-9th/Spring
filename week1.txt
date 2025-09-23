@@ -1,0 +1,25 @@
+
+[mission 1]
+    INSERT INTO review(id, user_id, store_id, content, rating, iamge, createAt, updateAt)
+    VALUES(1, 1, 1, ’또간집입니다’, 5, '/uploads/reviews/1.jpg’ NOW(), NOW() );
+
+[mission 2]
+    SELECT u.name, u.email, u.phone, u.point
+    FROM user u
+    WHERE u.id = :user_id;
+
+[mission 3]
+    SELECT m.point, s.name, m.description, um.status
+    FROM mission m
+    JOIN store s ON m.store_id = s.id
+    JOIN user_mission um ON um.mission_id = m.mission_id
+    ORDER BY m.mission_id DESC;
+
+[mission 4]
+    SELECT m.point, m.description, um.deadline, s.name, s.adress
+    FROM mission m
+    JOIN store s ON m.store_id = s.id
+    JOIN user_mission um ON um.mission_id = m.mission_id
+    WHERE um.status = 'n';
+    ORDER BY um.deadline ASC
+    LIMIT 10 OFFSET 0;    
