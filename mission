@@ -1,0 +1,50 @@
+1. 
+INSERT INTO Review (id, point, date, content, user_id, store_id)
+VALUES (:review_id, :point, DATE(NOW()), :content, :user_id, :store_id);
+
+2. 
+SELECT id,
+       email,
+       gender,
+       birth_day,
+       address,
+       point
+FROM User
+WHERE id = :user_id;
+
+3.
+SELECT
+  m.id                 AS mission_id,
+  m.accomplished_amount,
+  m.accumulation_point,
+  DATE_FORMAT(m.deadline, '%Y-%m-%d') AS deadline,
+  s.id                 AS store_id,
+  s.name               AS store_name,
+  um.is_complete
+FROM UserMission um
+JOIN Mission m ON um.mission_id = m.id
+LEFT JOIN Store s ON m.store_id = s.id
+WHERE um.user_id = :user_id
+ORDER BY um.is_complete ASC, m.deadline ASC
+LIMIT :page_size OFFSET :offset;
+
+4.
+SELECT
+  m.id                              AS mission_id,
+  m.accomplished_amount,
+  m.accumulation_point,
+  DATE_FORMAT(m.deadline, '%Y-%m-%d') AS deadline,
+  s.id                              AS store_id,
+  s.name                            AS store_name,
+  s.address                         AS store_address
+FROM Mission m
+JOIN Store s ON m.store_id = s.id
+LEFT JOIN UserMission um
+  ON um.mission_id = m.id
+  AND um.user_id = :user_id
+WHERE m.deadline >= CURDATE()
+  AND s.address LIKE CONCAT('%', :region, '%')
+  AND um.mission_id IS NULL
+ORDER BY m.deadline ASC
+LIMIT :page_size OFFSET :offset;
+
