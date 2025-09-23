@@ -21,8 +21,8 @@ DKU UMC Spring Boot 스터디
 
 ```bash
 ├─main
-    ├─judy/main
-    │  └─judy/#1
+    ├─hilees/main
+    │  └─hilees/#1
 ```
 
 1. `닉네임/main 브랜치`가 기본 브랜치로 pr 보낼 때 root 브랜치(main 브랜치)가 아닌 닉네임/main 브랜치로 올립니다.
