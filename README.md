@@ -6,7 +6,7 @@ DKU UMC Spring Boot 스터디
 
 |   이승준   |   정윤철   |   설원준   |   윤영주   |   고희연   |   고경수   |   구현모   |
 | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
-| [이승준](https://github.com/hilees) | [정윤철](https://github.com/Yoonchulchung) | [설원준]() | [윤영주]() | [고희연]() | [고경수]() | [구현모]() |
+| [이승준](https://github.com/hilees) | [정윤철](https://github.com/Yoonchulchung) | [설원준]() | [윤영주](https://github.com/som141) | [고희연]() | [고경수]() | [구현모]() |
 
 <br/>
 
