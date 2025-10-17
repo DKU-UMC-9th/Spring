@@ -1,3 +1,4 @@
+use market;
 CREATE TABLE users (
                        id        BIGINT NOT NULL AUTO_INCREMENT COMMENT '유저 고유 식별자',
                        email     VARCHAR(50) NOT NULL COMMENT '로그인 이메일(유니크)',
