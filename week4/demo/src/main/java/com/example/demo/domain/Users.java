@@ -35,5 +35,5 @@ public class Users {
     private String address;
 
     @Column(nullable = false)
-    private String point;
+    private Integer point;
 }
