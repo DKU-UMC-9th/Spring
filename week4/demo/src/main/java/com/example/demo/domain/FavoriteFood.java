@@ -1,10 +1,11 @@
-package com.example.demo.entity;
+package com.example.demo.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.catalina.User;
 
 @Entity
 @Table(name ="favorite_food")

@@ -1,0 +1,21 @@
+package com.example.demo.domain;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity @Table(name = "mission")
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+public class Mission {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    @JoinColumn(name="market_id", nullable=false)
+    private FoodMarket market;
+
+    @Column(nullable=false, length=100)
+    private String content;
+
+    @Column(name="mission_point", nullable=false)
+    private Integer missionPoint;
+}
