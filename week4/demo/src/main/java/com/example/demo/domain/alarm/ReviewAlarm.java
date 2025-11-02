@@ -1,5 +1,6 @@
 package com.example.demo.domain.alarm;
 
+import com.example.demo.domain.BaseEntity;
 import com.example.demo.domain.member.Users;
 import com.example.demo.domain.restruant.FoodMarket;
 import jakarta.persistence.*;
@@ -7,7 +8,7 @@ import lombok.*;
 
 @Entity @Table(name = "review_alarm")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class ReviewAlarm {
+public class ReviewAlarm extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

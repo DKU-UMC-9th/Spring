@@ -1,11 +1,12 @@
 package com.example.demo.domain.restruant;
 
+import com.example.demo.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity @Table(name = "foodmarket")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class FoodMarket {
+public class FoodMarket extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

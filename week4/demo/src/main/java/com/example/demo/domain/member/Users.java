@@ -1,5 +1,6 @@
 package com.example.demo.domain.member;
 
+import com.example.demo.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "users")
 @Getter@Setter@NoArgsConstructor@AllArgsConstructor
-public class Users {
+public class Users extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

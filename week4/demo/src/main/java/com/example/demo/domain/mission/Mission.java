@@ -1,12 +1,13 @@
 package com.example.demo.domain.mission;
 
+import com.example.demo.domain.BaseEntity;
 import com.example.demo.domain.restruant.FoodMarket;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity @Table(name = "mission")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class Mission {
+public class Mission extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

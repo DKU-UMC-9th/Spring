@@ -1,6 +1,7 @@
 package com.example.demo.domain.review;
 
 
+import com.example.demo.domain.BaseEntity;
 import com.example.demo.domain.member.Users;
 import com.example.demo.domain.restruant.FoodMarket;
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
 
 @Entity @Table(name = "review")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class Review {
+public class Review extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -25,7 +26,6 @@ public class Review {
     @Column(nullable=false, length=100)
     private String content;
 
-    // DB는 DECIMAL(2,1), JPA는 BigDecimal로 매핑
     @Column(nullable=false, precision=2, scale=1)
     private BigDecimal star;
 }

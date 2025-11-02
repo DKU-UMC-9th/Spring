@@ -1,11 +1,12 @@
 package com.example.demo.domain.review;
 
+import com.example.demo.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity @Table(name = "review_image")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class ReviewImage {
+public class ReviewImage extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
