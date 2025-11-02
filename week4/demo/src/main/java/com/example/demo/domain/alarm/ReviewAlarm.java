@@ -1,11 +1,13 @@
-package com.example.demo.domain;
+package com.example.demo.domain.alarm;
 
+import com.example.demo.domain.member.Users;
+import com.example.demo.domain.restruant.FoodMarket;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity @Table(name = "permission_mission")
+@Entity @Table(name = "review_alarm")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class PermissionMission {
+public class ReviewAlarm {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -14,6 +16,9 @@ public class PermissionMission {
     private Users user;
 
     @ManyToOne(optional=false, fetch=FetchType.LAZY)
-    @JoinColumn(name="mission_id", nullable=false)
-    private Mission mission;
+    @JoinColumn(name="foodmarket_id", nullable=false)
+    private FoodMarket foodmarket;
+
+    @Column(nullable=false, length=200)
+    private String content;
 }

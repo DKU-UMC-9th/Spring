@@ -1,5 +1,6 @@
-package com.example.demo.domain;
+package com.example.demo.domain.mission;
 
+import com.example.demo.domain.restruant.FoodMarket;
 import jakarta.persistence.*;
 import lombok.*;
 

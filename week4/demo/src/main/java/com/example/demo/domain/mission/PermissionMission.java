@@ -1,11 +1,12 @@
-package com.example.demo.domain;
+package com.example.demo.domain.mission;
 
+import com.example.demo.domain.member.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity @Table(name = "review_alarm")
+@Entity @Table(name = "permission_mission")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class ReviewAlarm {
+public class PermissionMission {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -14,9 +15,6 @@ public class ReviewAlarm {
     private Users user;
 
     @ManyToOne(optional=false, fetch=FetchType.LAZY)
-    @JoinColumn(name="foodmarket_id", nullable=false)
-    private FoodMarket foodmarket;
-
-    @Column(nullable=false, length=200)
-    private String content;
+    @JoinColumn(name="mission_id", nullable=false)
+    private Mission mission;
 }

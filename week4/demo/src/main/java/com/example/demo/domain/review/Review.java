@@ -1,6 +1,8 @@
-package com.example.demo.domain;
+package com.example.demo.domain.review;
 
 
+import com.example.demo.domain.member.Users;
+import com.example.demo.domain.restruant.FoodMarket;
 import jakarta.persistence.*;
 import lombok.*;
 
