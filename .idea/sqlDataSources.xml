@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="434d6814-0982-46bd-bd32-0451e234b57a" name="umc9th_db@localhost Mapping">
+      <data-sources db="c1b58ca5-5e2d-4367-9c72-6c3fec3e3064" />
+      <scope>
+        <node kind="database" negative="1" />
+      </scope>
+    </mapping>
+  </component>
+</project>
