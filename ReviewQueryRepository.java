@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.koo.week6.entity.QReview.review; // Q-Class 경로 가정 (패키지 경로 수정)
+import static com.koo.week6.entity.QReview.review; 
 
 @Repository
 @RequiredArgsConstructor
@@ -20,9 +20,6 @@ public class ReviewQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    /**
-     * 특정 가게의 리뷰 목록을 조회하고, 별점 필터링을 동적으로 적용합니다.
-     */
     public Page<Review> findReviewsByStoreAndFilter(Long storeId, List<Integer> stars, Pageable pageable) {
         
         // 1. 컨텐츠 조회 쿼리
