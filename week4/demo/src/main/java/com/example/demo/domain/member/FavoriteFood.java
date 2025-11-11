@@ -17,7 +17,7 @@ import lombok.Setter;
 public class FavoriteFood extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id",nullable = false)

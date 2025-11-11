@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class Users extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false,length = 50)
     private String email;
