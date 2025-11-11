@@ -7,5 +7,17 @@
         <node kind="database" negative="1" />
       </scope>
     </mapping>
+    <mapping uuid="288464b5-cd0b-4296-be01-e647c09a6942" name="umc9th_db@localhost [6] Mapping">
+      <data-sources db="e680c026-5e5b-47d9-b2be-704ec334ccd9" />
+      <scope>
+        <node kind="database" negative="1" />
+      </scope>
+    </mapping>
+    <mapping uuid="7e2d785b-a4f9-4230-b85b-d726845739ed" name="@localhost Mapping">
+      <data-sources db="854a2f26-a62f-4f33-a1c7-d569563d12b0" />
+      <scope>
+        <node kind="database" qname="@" />
+      </scope>
+    </mapping>
   </component>
 </project>
