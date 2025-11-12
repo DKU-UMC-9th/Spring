@@ -17,4 +17,14 @@ public class ReviewQueryService {
     public Page<MyReviewRowDto> getMyReviews(Long userId, Long storeId, Integer starBand, Pageable pageable) {
         return reviewRepository.findMyReviews(userId, storeId, starBand, pageable);
     }
+
+    @Transactional(readOnly = true)
+    public Page<MyReviewRowDto> getStoreReviews(Long storeId, Integer starBand, Pageable pageable) {
+        return reviewRepository.findStoreReviews(storeId, starBand, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<MyReviewRowDto> getReviewsByStar(Integer starBand, Pageable pageable) {
+        return reviewRepository.findReviewsByStar(starBand, pageable);
+    }
 }

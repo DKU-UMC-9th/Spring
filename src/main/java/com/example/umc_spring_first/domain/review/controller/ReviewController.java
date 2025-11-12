@@ -18,14 +18,6 @@ public class ReviewController {
 
     private final ReviewQueryService reviewQueryService;
 
-    /**
-     * 하나의 API로 가게/별점대 필터를 모두 처리
-     * 예)
-     * /api/reviews/my?userId=10                -> 내가 쓴 전체
-     * /api/reviews/my?userId=10&storeId=3      -> 특정 가게만
-     * /api/reviews/my?userId=10&stars=4        -> 4.x만
-     * /api/reviews/my?userId=10&storeId=3&stars=5 -> 그 가게의 5.0만
-     */
     @GetMapping("/my")
     public Page<MyReviewRowDto> getMyReviews(
             @RequestParam Long userId,
@@ -34,5 +26,22 @@ public class ReviewController {
             @PageableDefault(size = 10) Pageable pageable
     ) {
         return reviewQueryService.getMyReviews(userId, storeId, starBand, pageable);
+    }
+
+    @GetMapping("/store")
+    public Page<MyReviewRowDto> getStoreReviews(
+            @RequestParam Long storeId,
+            @RequestParam(required = false, name = "stars") Integer starBand,
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
+        return reviewQueryService.getStoreReviews(storeId, starBand, pageable);
+    }
+
+    @GetMapping("/stars")
+    public Page<MyReviewRowDto> getReviewsByStar(
+            @RequestParam Integer stars,
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
+        return reviewQueryService.getReviewsByStar(stars, pageable);
     }
 }

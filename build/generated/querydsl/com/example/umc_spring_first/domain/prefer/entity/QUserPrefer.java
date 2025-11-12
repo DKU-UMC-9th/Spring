@@ -27,6 +27,8 @@ public class QUserPrefer extends EntityPathBase<UserPrefer> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final QPrefer prefer;
+
     public final com.example.umc_spring_first.domain.user.entity.QUser user;
 
     public QUserPrefer(String variable) {
@@ -47,6 +49,7 @@ public class QUserPrefer extends EntityPathBase<UserPrefer> {
 
     public QUserPrefer(Class<? extends UserPrefer> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.prefer = inits.isInitialized("prefer") ? new QPrefer(forProperty("prefer")) : null;
         this.user = inits.isInitialized("user") ? new com.example.umc_spring_first.domain.user.entity.QUser(forProperty("user")) : null;
     }
 
