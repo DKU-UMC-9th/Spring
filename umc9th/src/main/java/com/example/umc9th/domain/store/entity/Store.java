@@ -3,6 +3,7 @@ package com.example.umc9th.domain.store.entity;
 import com.example.umc9th.domain.mission.entity.Mission;
 import com.example.umc9th.domain.review.entity.Review;
 import com.example.umc9th.global.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,8 +42,10 @@ public class Store extends BaseEntity {
 
     // 연관 관계
     @OneToMany(mappedBy = "store")
+    @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "store")
+    @JsonIgnore
     private List<Mission> missions = new ArrayList<>();
 }
