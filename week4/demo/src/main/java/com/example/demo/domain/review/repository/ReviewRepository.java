@@ -1,6 +1,6 @@
-package com.example.demo.repository.review;
+package com.example.demo.domain.review.repository;
 
-import com.example.demo.domain.review.Review;
+import com.example.demo.domain.review.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

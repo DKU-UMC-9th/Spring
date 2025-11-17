@@ -1,8 +1,8 @@
-package com.example.demo.domain.alarm;
+package com.example.demo.domain.alarm.entity;
 
 import com.example.demo.domain.BaseEntity;
-import com.example.demo.domain.member.Users;
-import com.example.demo.domain.restruant.FoodMarket;
+import com.example.demo.domain.member.entity.Users;
+import com.example.demo.domain.restruant.entity.FoodMarket;
 import jakarta.persistence.*;
 import lombok.*;
 

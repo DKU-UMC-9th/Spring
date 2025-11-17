@@ -1,8 +1,8 @@
 // src/main/java/com/example/demo/controller/ReviewController.java
-package com.example.demo.controller;
+package com.example.demo.domain.review.controller;
 
-import com.example.demo.dto.ReviewDto;
-import com.example.demo.service.ReviewService;
+import com.example.demo.domain.review.dto.ReviewDto;
+import com.example.demo.domain.review.service.ReviewService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.demo.domain.review;
+package com.example.demo.domain.review.entity;
 
 import com.example.demo.domain.BaseEntity;
 import jakarta.persistence.*;

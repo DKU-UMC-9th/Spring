@@ -1,7 +1,7 @@
-package com.example.demo.domain.mission;
+package com.example.demo.domain.mission.entity;
 
 import com.example.demo.domain.BaseEntity;
-import com.example.demo.domain.member.Users;
+import com.example.demo.domain.member.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 

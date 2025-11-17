@@ -1,6 +1,6 @@
-package com.example.demo.repository.mission;
+package com.example.demo.domain.mission.repository;
 
-import com.example.demo.domain.mission.MissionUser;
+import com.example.demo.domain.mission.entity.MissionUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

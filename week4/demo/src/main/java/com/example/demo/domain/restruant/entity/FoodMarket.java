@@ -1,4 +1,4 @@
-package com.example.demo.domain.restruant;
+package com.example.demo.domain.restruant.entity;
 
 import com.example.demo.domain.BaseEntity;
 import jakarta.persistence.*;
