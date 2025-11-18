@@ -23,8 +23,9 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-import static com.example.demo.domain.restruant.QFoodMarket.foodMarket;
-import static com.example.demo.domain.review.QReview.review;
+import static com.example.demo.domain.restruant.entity.QFoodMarket.foodMarket;
+import static com.example.demo.domain.review.entity.QReview.review;
+
 
 @Service
 @AllArgsConstructor
@@ -61,6 +62,42 @@ public class ReviewService  {
         return toResponse(saved);
     }
 
+    @Transactional
+    public ReviewResponse updateReview(Long reviewId, Long userId,ReviewCreateRequest request) {
+
+        Review reviewEntity = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new IllegalArgumentException("review not found :"+reviewId));
+
+        if(!reviewEntity.getUser().getId().equals(userId)){
+            throw new IllegalArgumentException("user not found :"+userId);
+        }
+
+        reviewEntity.setContent(request.content());
+        reviewEntity.setStar(request.star());
+
+        reviewImageRepository.deleteByReview(reviewEntity);
+
+        if(request.imageUrls()!=null&& !request.imageUrls().isEmpty()){
+            for(String url:request.imageUrls()){
+                ReviewImage reviewImage=new ReviewImage();
+                reviewImage.setReview(reviewEntity);
+                reviewImage.setUrl(url);
+                reviewImageRepository.save(reviewImage);
+            }
+        }
+        return toResponse(reviewEntity);
+    }
+    public void deleteReview(Long reviewId,Long userId) {
+
+        Review reviewEntity = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new IllegalArgumentException("review not found :"+reviewId));
+
+        if(!reviewEntity.getUser().getId().equals(userId)){
+            throw new IllegalArgumentException("user not found :"+userId);
+        }
+        reviewRepository.delete(reviewEntity);
+        reviewImageRepository.deleteByReview(reviewEntity);
+    }
 
     public List<ReviewDto> findMyReviews(Long userId, String marketName, Integer starBand) {
         // userId should be required; validate if needed
@@ -79,6 +116,7 @@ public class ReviewService  {
                 .orderBy(review.id.desc())
                 .fetch();
     }
+
     public List<ReviewResponse> findReviewsByMarket(Long marketId, Integer starBand) {
         List<Review> reviews = qf.selectFrom(review)
                 .leftJoin(review.market).fetchJoin()
