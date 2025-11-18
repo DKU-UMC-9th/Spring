@@ -56,7 +56,7 @@ public class ReviewQueryService {
     public List<MyReviewResponse> searchMyReviews(Long memberId, String restaurantName, Integer star){
         // Q 클래스 선언
         QReview review = QReview.review;
-        QRestaurant restaurant = QRestaurant.restaurant;
+        //QRestaurant restaurant = QRestaurant.restaurant;
 
         // BooleanBuilder 정의
         BooleanBuilder builder = new BooleanBuilder();
@@ -68,9 +68,10 @@ public class ReviewQueryService {
             builder.and(review.restaurant.name.contains(restaurantName));
         }
         if(star != null){
-            float minStar = star.floatValue();   // 4 → 4.0
-            float maxStar = star + 0.9f;         // 4 → 4.9
-            builder.and(review.star.between(minStar, maxStar));
+            float minStar = star.floatValue();
+            float maxStar = star + 1.0f;
+            builder.and(review.star.goe(minStar));
+            builder.and(review.star.lt(maxStar));
         }
 
         // Repository 사용 & 결과 매핑
