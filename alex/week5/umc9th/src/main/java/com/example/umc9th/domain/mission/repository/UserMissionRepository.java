@@ -17,7 +17,7 @@ public interface UserMissionRepository extends JpaRepository<UserMission,Long> {
     // 내가 진행중, 진행 완료한 미션 모아서 보는 쿼리(페이징 포함)
     @Query("""
         SELECT m
-        FROM UserMission um
+        FROM UserMission um 
         JOIN um.mission m
         WHERE um.user.id = :userId
           AND um.isComplete = :isComplete
@@ -38,9 +38,9 @@ public interface UserMissionRepository extends JpaRepository<UserMission,Long> {
         FROM UserMission um
         JOIN FETCH um.mission m
         JOIN FETCH m.store s
-        JOIN FETCH s.foodCategory fc
+        JOIN FETCH s.category  fc
         WHERE um.isComplete = false
-          AND s.address = :address
+          AND s.addr = :address
           AND um.user.id = :userId
         ORDER BY um.completeAt DESC
         """)
