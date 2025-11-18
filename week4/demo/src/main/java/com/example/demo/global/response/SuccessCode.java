@@ -1,8 +1,11 @@
 // src/main/java/com/example/demo/global/response/SuccessCode.java
 package com.example.demo.global.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
-
+@Getter
+@AllArgsConstructor
 public enum SuccessCode {
 
     // === Review 도메인 관련 응답 코드 ===
@@ -15,21 +18,7 @@ public enum SuccessCode {
     private final String code;
     private final String message;
 
-    SuccessCode(HttpStatus httpStatus, String code, String message) {
-        this.httpStatus = httpStatus;
-        this.code = code;
-        this.message = message;
-    }
 
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
-    }
 
-    public String getCode() {
-        return code;
-    }
 
-    public String getMessage() {
-        return message;
-    }
 }

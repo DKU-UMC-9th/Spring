@@ -5,6 +5,8 @@ import com.example.demo.domain.review.dto.ReviewCreateRequest;
 import com.example.demo.domain.review.dto.ReviewDto;
 import com.example.demo.domain.review.dto.ReviewResponse;
 import com.example.demo.domain.review.service.ReviewService;
+import com.example.demo.global.response.ApiResponse;
+import com.example.demo.global.response.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,34 +21,35 @@ public class ReviewController {
 
 
     @PostMapping
-    public ResponseEntity<ReviewResponse> createReview(
+    public ResponseEntity<ApiResponse<ReviewResponse>> createReview(
             @RequestBody ReviewCreateRequest request
             ){
         ReviewResponse reviewResponse=service.createReview(request);
-        return ResponseEntity.ok(reviewResponse);
+        return ApiResponse.success(SuccessCode.REVIEW_CREATE_SUCCESS,reviewResponse);
     }
     @PutMapping("/{reviewId}")
-    public ResponseEntity<ReviewResponse> updateReview(
+    public ResponseEntity<ApiResponse<ReviewResponse>> updateReview(
             @PathVariable Long reviewId,
             @RequestBody ReviewCreateRequest request
     ){
         ReviewResponse reviewResponse = service.updateReview(request.userId(), reviewId, request);
-        return ResponseEntity.ok(reviewResponse);
+        return ApiResponse.success(SuccessCode.REVIEW_UPDATE_SUCCESS,reviewResponse);
     }
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReview(
+    public ResponseEntity<ApiResponse<Void>> deleteReview(
             @PathVariable Long reviewId,
             @RequestParam Long userId
     ) {
         service.deleteReview(reviewId, userId);
-        return ResponseEntity.noContent().build();
+        return ApiResponse.success(SuccessCode.REVIEW_DELETE_SUCCESS);
     }
     @GetMapping("/my")
-    public List<ReviewDto> myReviews(
+    public ResponseEntity<ApiResponse<List<ReviewDto>>> myReviews(
             @RequestParam Long userId,
             @RequestParam(required = false) String marketName,
             @RequestParam(required = false) Integer starBand
     ) {
-        return service.findMyReviews(userId, marketName, starBand);
+        List<ReviewDto> result = service.findMyReviews(userId, marketName, starBand);
+        return ApiResponse.success(SuccessCode.REVIEW_MY_LIST_SUCCESS, result);
     }
 }
