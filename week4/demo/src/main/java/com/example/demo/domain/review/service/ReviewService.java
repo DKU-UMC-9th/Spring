@@ -11,6 +11,8 @@ import com.example.demo.domain.review.entity.Review;
 import com.example.demo.domain.review.entity.ReviewImage;
 import com.example.demo.domain.review.repository.ReviewImageRepository;
 import com.example.demo.domain.review.repository.ReviewRepository;
+import com.example.demo.global.apiPayload.Exception.ReviewException;
+import com.example.demo.global.apiPayload.response.ErrorCode;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -39,9 +41,9 @@ public class ReviewService  {
     @Transactional
     public ReviewResponse createReview(ReviewCreateRequest request){
         Users user=usersRepository.findById(request.userId())
-                .orElseThrow(()->new IllegalArgumentException("User not found: "+request.userId()));
+                .orElseThrow(()->new ReviewException(ErrorCode.REVIEW_CREATE_ERROR));
         FoodMarket market = foodMarketRepository.findById(request.marketId())
-                .orElseThrow(()->new IllegalArgumentException("market not found :"+request.marketId()));
+                .orElseThrow(()->new ReviewException(ErrorCode.REVIEW_CREATE_ERROR));
         Review reviewEntity = new Review();
         reviewEntity.setUser(user);
         reviewEntity.setMarket(market);
@@ -66,10 +68,10 @@ public class ReviewService  {
     public ReviewResponse updateReview(Long reviewId, Long userId,ReviewCreateRequest request) {
 
         Review reviewEntity = reviewRepository.findById(reviewId)
-                .orElseThrow(()->new IllegalArgumentException("review not found :"+reviewId));
+                .orElseThrow(()->new ReviewException(ErrorCode.REVIEW_UPDATE_ERROR));
 
         if(!reviewEntity.getUser().getId().equals(userId)){
-            throw new IllegalArgumentException("user not found :"+userId);
+           new ReviewException(ErrorCode.REVIEW_UPDATE_ERROR);
         }
 
         reviewEntity.setContent(request.content());
@@ -90,10 +92,10 @@ public class ReviewService  {
     public void deleteReview(Long reviewId,Long userId) {
 
         Review reviewEntity = reviewRepository.findById(reviewId)
-                .orElseThrow(()->new IllegalArgumentException("review not found :"+reviewId));
+                .orElseThrow(()->new ReviewException(ErrorCode.REVIEW_DELETE_ERROR));
 
         if(!reviewEntity.getUser().getId().equals(userId)){
-            throw new IllegalArgumentException("user not found :"+userId);
+            throw new ReviewException(ErrorCode.REVIEW_DELETE_ERROR);
         }
         reviewRepository.delete(reviewEntity);
         reviewImageRepository.deleteByReview(reviewEntity);
