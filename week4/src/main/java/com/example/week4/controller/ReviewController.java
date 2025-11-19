@@ -1,0 +1,29 @@
+package com.example.week4.controller;
+
+import com.example.week4.domain.Review;
+import com.example.week4.repository.ReviewRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/stores")
+public class ReviewController {
+
+    private final ReviewRepository reviewRepository;
+
+    @GetMapping("/{storeId}/reviews")
+    public ResponseEntity<List<Review>> getStoreReviews(
+            @PathVariable Long storeId,
+            @RequestParam(required = false) List<Integer> starRating,
+            Pageable pageable
+    ) {
+        List<Review> reviewPage = reviewRepository.findReviewsByStoreAndFilter(storeId, starRating, pageable);
+
+        return ResponseEntity.ok(reviewPage);
+    }
+}
