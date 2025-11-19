@@ -1,4 +1,4 @@
-package com.example.demo.domain;
+package com.example.demo.global.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.Instant;
 
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class)//이걸 해야 저게 자동 기록됨.
 @Getter
 public abstract class BaseEntity {
 

@@ -1,7 +1,7 @@
 // src/main/java/com/example/demo/global/response/SuccessCode.java
-package com.example.demo.domain.review.Exception.code;
+package com.example.demo.domain.review.exception.code;
 
-import com.example.demo.global.apiPayload.response.BaseSuccessCode;
+import com.example.demo.global.apipayload.response.BaseSuccessCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

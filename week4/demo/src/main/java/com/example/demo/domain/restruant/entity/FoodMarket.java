@@ -1,6 +1,6 @@
 package com.example.demo.domain.restruant.entity;
 
-import com.example.demo.domain.BaseEntity;
+import com.example.demo.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

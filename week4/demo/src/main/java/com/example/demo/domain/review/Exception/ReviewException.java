@@ -1,7 +1,7 @@
-package com.example.demo.domain.review.Exception;
+package com.example.demo.domain.review.exception;
 
-import com.example.demo.global.apiPayload.Exception.GeneralException;
-import com.example.demo.domain.review.Exception.code.ReviewErrorCode;
+import com.example.demo.global.apipayload.Exception.GeneralException;
+import com.example.demo.domain.review.exception.code.ReviewErrorCode;
 
 public class ReviewException extends GeneralException {
     public ReviewException(ReviewErrorCode errorCode) {

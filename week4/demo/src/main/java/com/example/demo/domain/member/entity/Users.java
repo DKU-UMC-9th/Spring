@@ -1,6 +1,6 @@
 package com.example.demo.domain.member.entity;
 
-import com.example.demo.domain.BaseEntity;
+import com.example.demo.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

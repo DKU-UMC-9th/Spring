@@ -5,8 +5,9 @@ import com.example.demo.domain.review.dto.ReviewCreateRequest;
 import com.example.demo.domain.review.dto.ReviewDto;
 import com.example.demo.domain.review.dto.ReviewResponse;
 import com.example.demo.domain.review.service.ReviewService;
-import com.example.demo.global.apiPayload.response.ApiResponse;
-import com.example.demo.domain.review.Exception.code.ReviewSuccessCode;
+import com.example.demo.global.apipayload.response.ApiResponse;
+import com.example.demo.domain.review.exception.code.ReviewSuccessCode;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class ReviewController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<ReviewResponse>> createReview(
-            @RequestBody ReviewCreateRequest request
+            @Valid @RequestBody ReviewCreateRequest request
             ){
         ReviewResponse reviewResponse=service.createReview(request);
         return ApiResponse.success(ReviewSuccessCode.REVIEW_CREATE_SUCCESS,reviewResponse);

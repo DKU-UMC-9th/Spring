@@ -1,6 +1,6 @@
-package com.example.demo.global.apiPayload.Exception;
+package com.example.demo.global.apipayload.Exception;
 
-import com.example.demo.domain.review.Exception.code.ReviewErrorCode;
+import com.example.demo.domain.review.exception.code.ReviewErrorCode;
 import lombok.Getter;
 
 @Getter

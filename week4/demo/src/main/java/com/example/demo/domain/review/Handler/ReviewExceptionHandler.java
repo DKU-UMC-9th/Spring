@@ -1,8 +1,8 @@
-package com.example.demo.domain.review.Handler;
+package com.example.demo.domain.review.handler;
 
-import com.example.demo.domain.review.Exception.ReviewException;
-import com.example.demo.global.apiPayload.response.ApiResponse;
-import com.example.demo.domain.review.Exception.code.ReviewErrorCode;
+import com.example.demo.domain.review.exception.ReviewException;
+import com.example.demo.global.apipayload.response.ApiResponse;
+import com.example.demo.domain.review.exception.code.ReviewErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

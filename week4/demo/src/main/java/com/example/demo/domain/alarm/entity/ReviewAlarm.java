@@ -1,6 +1,6 @@
 package com.example.demo.domain.alarm.entity;
 
-import com.example.demo.domain.BaseEntity;
+import com.example.demo.global.entity.BaseEntity;
 import com.example.demo.domain.member.entity.Users;
 import com.example.demo.domain.restruant.entity.FoodMarket;
 import jakarta.persistence.*;

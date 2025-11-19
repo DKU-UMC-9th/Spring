@@ -1,6 +1,6 @@
-package com.example.demo.domain.review.Exception.code;
+package com.example.demo.domain.review.exception.code;
 
-import com.example.demo.global.apiPayload.response.BaseErrorCode;
+import com.example.demo.global.apipayload.response.BaseErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

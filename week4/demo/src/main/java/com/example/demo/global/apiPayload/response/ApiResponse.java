@@ -1,5 +1,5 @@
 
-package com.example.demo.global.apiPayload.response;
+package com.example.demo.global.apipayload.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.example.demo.domain.mission.entity;
 
-import com.example.demo.domain.BaseEntity;
+import com.example.demo.global.entity.BaseEntity;
 import com.example.demo.domain.restruant.entity.FoodMarket;
 import jakarta.persistence.*;
 import lombok.*;
