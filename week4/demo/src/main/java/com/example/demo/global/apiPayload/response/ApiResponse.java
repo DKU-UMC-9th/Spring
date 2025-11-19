@@ -15,7 +15,7 @@ public class ApiResponse<T> {
 
 
     // data 있는 성공
-    public static <T> ResponseEntity<ApiResponse<T>> success(SuccessCode code, T data) {
+    public static <T> ResponseEntity<ApiResponse<T>> success(BaseSuccessCode code, T data) {
         ApiResponse<T> body = new ApiResponse<>(
                 true,
                 code.getCode(),
@@ -26,7 +26,7 @@ public class ApiResponse<T> {
     }
 
     // data 없는 성공 (DELETE 등)
-    public static ResponseEntity<ApiResponse<Void>> success(SuccessCode code) {
+    public static ResponseEntity<ApiResponse<Void>> success(BaseSuccessCode code) {
         ApiResponse<Void> body = new ApiResponse<>(
                 true,
                 code.getCode(),
@@ -36,7 +36,7 @@ public class ApiResponse<T> {
         return ResponseEntity.status(code.getHttpStatus()).body(body);
     }
     // data 있는 실패
-    public static <T> ResponseEntity<ApiResponse<T>> ERROR(ErrorCode code, T data) {
+    public static <T> ResponseEntity<ApiResponse<T>> ERROR(BaseErrorCode code, T data) {
         ApiResponse<T> body = new ApiResponse<>(
                 false,
                 code.getCode(),
@@ -48,7 +48,7 @@ public class ApiResponse<T> {
     }
 
     // data 없는 실패(DELETE 등)
-    public static ResponseEntity<ApiResponse<Void>> ERROR(ErrorCode code) {
+    public static ResponseEntity<ApiResponse<Void>> ERROR(BaseErrorCode code) {
         ApiResponse<Void> body = new ApiResponse<>(
                 false,
                 code.getCode(),

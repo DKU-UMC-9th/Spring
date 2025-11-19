@@ -1,12 +1,13 @@
-package com.example.demo.global.apiPayload.response;
+package com.example.demo.domain.review.Exception.code;
 
+import com.example.demo.global.apiPayload.response.BaseErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
 @Getter
-public enum ErrorCode {
+public enum ReviewErrorCode implements BaseErrorCode {
     REVIEW_CREATE_ERROR(HttpStatus.BAD_REQUEST,        "R001", "리뷰 등록을 실패했습니다."),
     REVIEW_UPDATE_ERROR(HttpStatus.BAD_REQUEST,        "R002", "리뷰 수정이 실패했습니다."),
     REVIEW_DELETE_ERROR(HttpStatus.BAD_REQUEST,"R003", "리뷰가 삭제에 실패했습니다."),

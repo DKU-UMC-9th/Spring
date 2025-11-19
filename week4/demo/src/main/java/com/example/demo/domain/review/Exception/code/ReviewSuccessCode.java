@@ -1,12 +1,13 @@
 // src/main/java/com/example/demo/global/response/SuccessCode.java
-package com.example.demo.global.apiPayload.response;
+package com.example.demo.domain.review.Exception.code;
 
+import com.example.demo.global.apiPayload.response.BaseSuccessCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
-public enum SuccessCode {
+public enum ReviewSuccessCode implements BaseSuccessCode {
 
     // === Review 도메인 관련 응답 코드 ===
     REVIEW_CREATE_SUCCESS(HttpStatus.OK,        "R001", "리뷰가 성공적으로 등록되었습니다."),
