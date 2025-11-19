@@ -1,5 +1,7 @@
 package com.example.week4.controller;
 
+import com.example.week4.apiPayload.ApiResponse;
+import com.example.week4.apiPayload.code.GeneralSuccessCode;
 import com.example.week4.domain.Review;
 import com.example.week4.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +19,13 @@ public class ReviewController {
     private final ReviewRepository reviewRepository;
 
     @GetMapping("/{storeId}/reviews")
-    public ResponseEntity<List<Review>> getStoreReviews(
+    public ApiResponse<List<Review>> getStoreReviews(
             @PathVariable Long storeId,
             @RequestParam(required = false) List<Integer> starRating,
             Pageable pageable
     ) {
         List<Review> reviewPage = reviewRepository.findReviewsByStoreAndFilter(storeId, starRating, pageable);
 
-        return ResponseEntity.ok(reviewPage);
+        return ApiResponse.onSuccess(GeneralSuccessCode.GET_SUCCESS, reviewPage);
     }
 }
