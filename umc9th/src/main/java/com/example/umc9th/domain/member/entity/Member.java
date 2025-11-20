@@ -48,13 +48,13 @@ public class Member extends BaseEntity {
     @Column(name = "status")
     private boolean status;
 
-    //연관 관계
-    @OneToMany(mappedBy = "member")
-    @JsonIgnore
-    private List<MemberInterest> memberInterests = new ArrayList<>();
+//    //연관 관계
+//    @OneToMany(mappedBy = "member")
+//    @JsonIgnore
+//    private List<MemberInterest> memberInterests = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
-    @JsonIgnore
-    private List<MemberTerm> memberTerms = new ArrayList<>();
+//    @OneToMany(mappedBy = "member")
+//    @JsonIgnore
+//    private List<MemberTerm> memberTerms = new ArrayList<>();
 
 }

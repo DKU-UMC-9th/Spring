@@ -1,16 +1,15 @@
 package com.example.umc9th.domain.review.controller;
 
+import com.example.umc9th.domain.review.dto.ReviewReqDTO;
+import com.example.umc9th.domain.review.dto.ReviewResDTO;
 import com.example.umc9th.domain.review.entity.Review;
+import com.example.umc9th.domain.review.exception.code.ReviewSuccessCode;
 import com.example.umc9th.domain.review.service.ReviewService;
 import com.example.umc9th.global.apiPayload.ApiResponse;
 import com.example.umc9th.global.apiPayload.code.GeneralSuccessCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -38,7 +37,12 @@ public class ReviewController {
 
     }
 
-
-
+    @PostMapping
+    public ApiResponse<ReviewResDTO.CreateDTO> createReview(
+            @RequestBody ReviewReqDTO.CreateDTO dto
+    ){
+        ReviewResDTO.CreateDTO result = reviewService.createReview(dto);
+        return ApiResponse.onSuccess(ReviewSuccessCode.CREATE, result);
+    }
 
 }
