@@ -22,6 +22,8 @@ public class UserMission extends BaseEntity {
     @Column(name = "deadline", nullable = false)
     private LocalDate deadline;
 
+    // true  = 진행중(CHALLENGING)
+    // false = 성공(SUCCESS)
     @Column(name = "status", nullable = false)
     private boolean status;
 
@@ -33,4 +35,9 @@ public class UserMission extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = false)
     private Mission mission;
+
+    // ==== 비즈니스 메서드 ====
+    public void complete() {
+        this.status = false;
+    }
 }
