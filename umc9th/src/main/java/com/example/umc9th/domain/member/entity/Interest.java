@@ -22,9 +22,9 @@ public class Interest {
     @Enumerated(EnumType.STRING)
     private FoodName name;
 
-    //연관 관계
-    @OneToMany(mappedBy = "interest")
-    private List<MemberInterest> memberInterests = new ArrayList<>();
+//    //연관 관계
+//    @OneToMany(mappedBy = "interest")
+//    private List<MemberInterest> memberInterests = new ArrayList<>();
 
 
 }

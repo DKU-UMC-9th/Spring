@@ -2,6 +2,7 @@ package com.example.umc9th.domain.member.entity;
 
 import com.example.umc9th.domain.member.enums.Gender;
 import com.example.umc9th.global.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -47,11 +48,13 @@ public class Member extends BaseEntity {
     @Column(name = "status")
     private boolean status;
 
-    //연관 관계
-    @OneToMany(mappedBy = "member")
-    private List<MemberInterest> memberInterests = new ArrayList<>();
+//    //연관 관계
+//    @OneToMany(mappedBy = "member")
+//    @JsonIgnore
+//    private List<MemberInterest> memberInterests = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
-    private List<MemberTerm> memberTerms = new ArrayList<>();
+//    @OneToMany(mappedBy = "member")
+//    @JsonIgnore
+//    private List<MemberTerm> memberTerms = new ArrayList<>();
 
 }
