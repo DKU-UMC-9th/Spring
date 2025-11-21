@@ -5,5 +5,5 @@ import com.querydsl.core.types.Predicate;
 import java.util.List;
 
 public interface ReviewQueryDsl {
-    List<Review> searchReview(Predicate predicate);    
+    List<Review> searchReviewByStore(Predicate predicate);    
 }

@@ -15,11 +15,9 @@ public class ReviewQueryDslImpl implements ReviewQueryDsl {
     private final EntityManager em;
 
     @Override
-    public List<Review> searchReview(Predicate predicate) {
+    public List<Review> searchReviewByStore(Predicate predicate) {
         
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
-        
         QReview review = QReview.review;
 
         return queryFactory
@@ -30,4 +28,5 @@ public class ReviewQueryDslImpl implements ReviewQueryDsl {
                 .orderBy(review.createdAt.desc()) //최근에 작성된 리뷰를 먼저 봄.
                 .fetch();
     }
+
 }

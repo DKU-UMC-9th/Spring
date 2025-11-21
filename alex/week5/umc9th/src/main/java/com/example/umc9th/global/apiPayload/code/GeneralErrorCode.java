@@ -12,6 +12,10 @@ public enum GeneralErrorCode implements BaseErrorCode {
             "COMMON400_1",
             "잘못된 요청입니다."),
 
+    INVALID_DATA(HttpStatus.BAD_REQUEST,
+            "COMMON4001_2",
+            "유효하지 않은 데이터입니다."),
+
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED,
             "COMMON401_1",
             "인증이 필요합니다."),
@@ -28,6 +32,7 @@ public enum GeneralErrorCode implements BaseErrorCode {
             "COMMON500_1",
             "서버 내부 오류가 발생했습니다."),
     ;
+
 
     private final HttpStatus status;
     private final String code;

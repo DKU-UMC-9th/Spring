@@ -21,7 +21,7 @@ public class Review extends BaseTime {
     @ManyToOne(fetch=FetchType.LAZY) @JoinColumn(name="store_id", nullable=false)
     private Store store;
 
-    @Column(nullable=false) private Integer star;
+    @Column(nullable=false) private Float star;
     @Column(nullable=false, length=1000) private String content;
     @Column(nullable=false) private Boolean dbStatus;
 

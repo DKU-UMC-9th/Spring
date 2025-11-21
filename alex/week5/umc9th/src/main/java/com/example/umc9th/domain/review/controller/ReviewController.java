@@ -4,9 +4,19 @@ import com.example.umc9th.domain.review.entity.Review;
 import com.example.umc9th.domain.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+
+import com.example.umc9th.domain.review.dto.ReviewResponse;
+import com.example.umc9th.global.apiPayload.code.GeneralSuccessCode;
+import com.example.umc9th.global.apiPayload.ApiResponse;
+import com.example.umc9th.domain.review.dto.ReviewRequestCreate;
+
+import jakarta.validation.Valid; 
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +29,21 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @GetMapping("/search")
-    public List<Review> Search(@RequestParam String query, @RequestParam String type) {
-        List<Review> reviews = reviewService.searchReview(query, type);
-        return reviews;
+    @PostMapping
+    public ApiResponse<ReviewResponse> Create(
+        @Valid @RequestBody ReviewRequestCreate request
+    ) {
+        ReviewResponse resp = reviewService.createReview(request);
+        return ApiResponse.onSuccess(GeneralSuccessCode.CREATE, resp);
     }
 
-    @GetMapping("/myreview")
-    public List<Review> My(@RequestParam(required = false) String storeName,
-                           @RequestParam(required = false) Integer star) {
-        long memberId = 1;
-        List<Review> reviews = reviewService.getMyReviews(memberId, storeName, star);
-        return reviews;
+    // @GetMapping
+    // public ApiResponse<ReviewResponse> Search(
+    //     @RequestParam Long userId,
+    //     @RequestParam Long storeId
+    // ) {
+    //     ReviewResponse resp = reviewService.findbyStore();
+    //     return ApiResponse.onSuccess(GeneralSuccessCode.GOOD_REQUEST, resp);
+    // }
 
-    }
 }
