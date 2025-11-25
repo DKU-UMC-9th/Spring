@@ -33,7 +33,7 @@ public class QUserMission extends EntityPathBase<UserMission> {
 
     public final QMission mission;
 
-    public final StringPath status = createString("status");
+    public final EnumPath<com.example.umc_spring_first.domain.mission.enums.UserMissionStatus> status = createEnum("status", com.example.umc_spring_first.domain.mission.enums.UserMissionStatus.class);
 
     public final DateTimePath<java.time.LocalDateTime> updateAt = createDateTime("updateAt", java.time.LocalDateTime.class);
 

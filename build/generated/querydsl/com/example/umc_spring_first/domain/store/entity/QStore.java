@@ -33,7 +33,7 @@ public class QStore extends EntityPathBase<Store> {
 
     public final StringPath name = createString("name");
 
-    public final NumberPath<Integer> ownerNumber = createNumber("ownerNumber", Integer.class);
+    public final StringPath ownerNumber = createString("ownerNumber");
 
     public final StringPath phone = createString("phone");
 
