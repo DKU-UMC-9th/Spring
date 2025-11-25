@@ -29,7 +29,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ApiResponse<ReviewResponse> Create(
         @Valid @RequestBody ReviewRequestCreate request
     ) {
@@ -37,13 +37,11 @@ public class ReviewController {
         return ApiResponse.onSuccess(GeneralSuccessCode.CREATE, resp);
     }
 
-    // @GetMapping
-    // public ApiResponse<ReviewResponse> Search(
-    //     @RequestParam Long userId,
-    //     @RequestParam Long storeId
-    // ) {
-    //     ReviewResponse resp = reviewService.findbyStore();
-    //     return ApiResponse.onSuccess(GeneralSuccessCode.GOOD_REQUEST, resp);
-    // }
-
+    @GetMapping("/search")
+    public ApiResponse<List<ReviewResponse>> Search(
+        @RequestParam Long storeId
+    ) {
+        List<ReviewResponse> resp = reviewService.search(storeId);
+        return ApiResponse.onSuccess(GeneralSuccessCode.GOOD_REQUEST, resp);
+    }
 }

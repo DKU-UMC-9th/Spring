@@ -8,4 +8,6 @@ import com.example.umc9th.domain.review.dto.ReviewRequestCreate;
 public interface ReviewService {
     
     ReviewResponse createReview(ReviewRequestCreate reqeust);
+    List<ReviewResponse> search(Long storeId);
+
 }

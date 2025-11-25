@@ -27,8 +27,7 @@ public class ReviewServiceImpl implements ReviewService{
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
 
-
-
+    @Override
     @Transactional
     public ReviewResponse createReview(ReviewRequestCreate request) {
         
@@ -49,6 +48,15 @@ public class ReviewServiceImpl implements ReviewService{
         Review saved  = reviewRepository.save(review);
 
         return toResponse(review);
+    }
+
+    @Override
+    public List<ReviewResponse> search(Long storeId) {
+        List<Review> reviews = reviewRepository.findByStoreId(storeId);
+
+        return reviews.stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     private ReviewResponse toResponse(Review review) {
