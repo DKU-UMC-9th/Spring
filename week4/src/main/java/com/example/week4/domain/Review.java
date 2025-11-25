@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@lombok.Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Review {
@@ -37,6 +38,7 @@ public class Review {
     private Store store;
 
     @OneToMany(mappedBy = "review")
+    @lombok.Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
     @Column(nullable = false, updatable = false)

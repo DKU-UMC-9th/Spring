@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@lombok.Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @IdClass(UserMission.UserMissionId.class)

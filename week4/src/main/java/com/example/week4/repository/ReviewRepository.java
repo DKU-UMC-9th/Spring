@@ -18,6 +18,15 @@ public class ReviewRepository {
 
     private final EntityManager entityManager;
 
+    public Review save(Review review) {
+        if (review.getId() == null) {
+            entityManager.persist(review);
+            return review;
+        } else {
+            return entityManager.merge(review);
+        }
+    }
+
     public List<Review> findReviewsByStoreAndFilter(Long storeId, List<Integer> stars, Pageable pageable) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
 

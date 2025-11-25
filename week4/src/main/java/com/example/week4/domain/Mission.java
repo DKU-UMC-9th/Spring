@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@lombok.Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Mission {
@@ -32,6 +33,7 @@ public class Mission {
     private Store store;
 
     @OneToMany(mappedBy = "mission")
+    @lombok.Builder.Default
     private List<UserMission> userMissions = new ArrayList<>();
 
     @Column(nullable = false, updatable = false)
