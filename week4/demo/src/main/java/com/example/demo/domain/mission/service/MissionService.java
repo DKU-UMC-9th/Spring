@@ -26,9 +26,7 @@ public class MissionService {
     private final UsersRepository usersRepository;
     private final FoodMarketRepository foodMarketRepository;
 
-    // =========================
-    // [1] 가게 미션 등록
-    // =========================
+
     @Transactional
     public Mission createMission(Long marketId, MissionDtos.MissionCreateRequest request) {
         FoodMarket market = foodMarketRepository.findById(marketId)
@@ -42,24 +40,19 @@ public class MissionService {
         return missionRepository.save(mission);
     }
 
-    // =========================
-    // [2] 가게의 미션 리스트 조회
-    // =========================
+
     @Transactional
     public List<Mission> getMissionsByMarket(Long marketId) {
         FoodMarket market = foodMarketRepository.findById(marketId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가게입니다."));
 
-        // 단순 예시: market 기준으로 필터
-        // (MissionRepository에 findByMarket(...) 를 추가하는 게 더 깔끔)
+
         return missionRepository.findAll().stream()
                 .filter(m -> m.getMarket().equals(market))
                 .toList();
     }
 
-    // =========================
-    // [3] 미션 수락
-    // =========================
+
     @Transactional
     public MissionUser acceptMission(MissionDtos.AcceptRequest request) {
         Mission mission = missionRepository.findById(request.missionId())
@@ -80,9 +73,7 @@ public class MissionService {
         return missionUserRepository.save(mu);
     }
 
-    // =========================
-    // [4] 미션 완료
-    // =========================
+
     @Transactional
     public MissionUser completeMission(MissionDtos.CompleteRequest request) {
         Mission mission = missionRepository.findById(request.missionId())
