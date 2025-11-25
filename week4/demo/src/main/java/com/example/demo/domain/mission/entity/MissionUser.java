@@ -19,6 +19,10 @@ public class MissionUser extends BaseEntity {
     @JoinColumn(name="user_id", nullable=false)
     private Users user;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MissionStatus missionStatus;
+
     @Column(nullable=false, length=200)
     private String content;
 }
