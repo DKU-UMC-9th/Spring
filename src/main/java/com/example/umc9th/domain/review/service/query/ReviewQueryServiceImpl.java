@@ -1,8 +1,13 @@
-package com.example.umc9th.domain.review.service;
+package com.example.umc9th.domain.review.service.query;
 
 import static com.example.umc9th.domain.restaurant.entity.QRegion.region;
 
-import com.example.umc9th.domain.restaurant.entity.QRestaurant;
+import com.example.umc9th.domain.restaurant.entity.Restaurant;
+import com.example.umc9th.domain.restaurant.exception.RestaurantException;
+import com.example.umc9th.domain.restaurant.exception.code.RestaurantErrorCode;
+import com.example.umc9th.domain.restaurant.repository.RestaurantRepository;
+import com.example.umc9th.domain.review.converter.ReviewConverter;
+import com.example.umc9th.domain.review.dto.res.ReviewResDTO;
 import com.example.umc9th.domain.review.dto.res.ReviewResDTO.MyReviewResponse;
 import com.example.umc9th.domain.review.entity.QReview;
 import com.example.umc9th.domain.review.entity.Review;
@@ -10,14 +15,18 @@ import com.example.umc9th.domain.review.repository.ReviewRepository;
 import com.querydsl.core.BooleanBuilder;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ReviewQueryService {
+public class ReviewQueryServiceImpl implements ReviewQueryService{
 
     private final ReviewRepository reviewRepository;
+    private final RestaurantRepository restaurantRepository;
 
+    @Override
     public List<Review> searchReview(String query, String type){
         // Q클래스 정의
         QReview review = QReview.review;
@@ -52,6 +61,7 @@ public class ReviewQueryService {
         return reviewList;
     }
 
+    @Override
     // 내가 작성한 리뷰
     public List<MyReviewResponse> searchMyReviews(Long memberId, String restaurantName, Integer star){
         // Q 클래스 선언
@@ -81,5 +91,24 @@ public class ReviewQueryService {
         return myReviews;
 
     }
+
+    // 가게의 리뷰 목록 조회
+    @Override
+    public ReviewResDTO.ReviewPreviewListDTO findReview(
+            String restaurantName,
+            Integer page
+    ){
+        // 가게 존재 여부 검증
+        Restaurant restaurant = restaurantRepository.findByName(restaurantName)
+                .orElseThrow(() -> new RestaurantException(RestaurantErrorCode.NOT_FOUND));
+
+        // 가게에 맞는 리뷰 가져오기(Offset 페이징)
+        PageRequest pageRequest = PageRequest.of(page, 5);
+        Page<Review> result = reviewRepository.findAllByRestaurant(restaurant, pageRequest);
+
+        // 결과 응답 DTO 변환(컨버터 이용)
+        return ReviewConverter.toReviewPreviewListDTO(result);
+    }
+
 
 }

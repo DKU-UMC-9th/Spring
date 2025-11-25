@@ -28,4 +28,12 @@ public class MemberMission {
     @Column(name = "is_complete", nullable = false)
     private boolean complete; //완료 여부
 
+    // 정적 팩토리 메서드
+    public static MemberMission create(Member member, Mission mission){
+        MemberMission mm = new MemberMission();
+        mm.member = member;
+        mm.mission = mission;
+        mm.complete = false;
+        return mm;
+    }
 }

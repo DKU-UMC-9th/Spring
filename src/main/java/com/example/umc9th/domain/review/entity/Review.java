@@ -31,4 +31,14 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    // 정적 팩토리 메서드
+    public static Review create(Member member, Restaurant restaurant, float star, String content){
+        Review review = new Review();
+        review.member = member;
+        review.restaurant = restaurant;
+        review.star = star;
+        review.content = content;
+        return review;
+    }
 }

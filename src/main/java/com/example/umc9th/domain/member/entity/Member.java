@@ -1,5 +1,6 @@
 package com.example.umc9th.domain.member.entity;
 
+import com.example.umc9th.domain.member.enums.Address;
 import com.example.umc9th.domain.member.enums.Gender;
 import com.example.umc9th.domain.member.enums.SocialType;
 import com.example.umc9th.domain.member.enums.Status;
@@ -28,7 +29,7 @@ public class Member extends BaseEntity {
     @Column(name = "name", length = 3, nullable = false)
     private String name;  //이름
 
-    @Column(name = "nickname", nullable = false)
+    @Column(name = "nickname")
     private String nickname; //닉네임
 
     @Column(name = "gender", nullable = false)
@@ -40,9 +41,13 @@ public class Member extends BaseEntity {
     private LocalDate birth; //생년월일
 
     @Column(name = "address", nullable = false)
-    private String address; //주소
+    @Enumerated(EnumType.STRING)
+    private Address address; //주소
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "detail_address", nullable = false)
+    private String detailAddress; //상세주소
+
+    @Column(name = "email")
     private String email; //이메일
 
     @Column(name = "phone_number")
@@ -50,14 +55,17 @@ public class Member extends BaseEntity {
 
     @Column(name = "social_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private SocialType socialType; //소셜로그인 타입
+    @Builder.Default
+    private SocialType socialType = SocialType.LOCAL; //소셜로그인 타입
 
     @Column(name = "point", nullable = false)
-    private Integer point; //포인트
+    @Builder.Default
+    private Integer point = 0; //포인트
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status; //상태
+    @Builder.Default
+    private Status status = Status.ACTIVE; //상태
 
     @Column(name = "inactive_date")
     private LocalDateTime inactiveDate; //비활성일
