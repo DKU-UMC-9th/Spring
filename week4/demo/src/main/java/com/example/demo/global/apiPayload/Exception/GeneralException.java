@@ -1,4 +1,4 @@
-package com.example.demo.global.apipayload.Exception;
+package com.example.demo.global.apipayload.exception;
 
 import com.example.demo.domain.review.exception.code.ReviewErrorCode;
 import lombok.Getter;
