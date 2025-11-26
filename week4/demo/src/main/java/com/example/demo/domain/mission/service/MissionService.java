@@ -2,10 +2,12 @@ package com.example.demo.domain.mission.service;
 
 import com.example.demo.domain.member.entity.Users;
 import com.example.demo.domain.member.repository.UsersRepository;
+import com.example.demo.domain.mission.exception.code.MissionErrorCode;
 import com.example.demo.domain.mission.dto.MissionDtos;
 import com.example.demo.domain.mission.entity.Mission;
 import com.example.demo.domain.mission.entity.MissionStatus;
 import com.example.demo.domain.mission.entity.MissionUser;
+import com.example.demo.domain.mission.exception.MissionException;
 import com.example.demo.domain.mission.repository.MissionRepository;
 import com.example.demo.domain.mission.repository.MissionUserRepository;
 import com.example.demo.domain.restruant.entity.FoodMarket;
@@ -19,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MissionService {
 
     private final MissionRepository missionRepository;
@@ -26,72 +29,113 @@ public class MissionService {
     private final UsersRepository usersRepository;
     private final FoodMarketRepository foodMarketRepository;
 
-
-    @Transactional
-    public Mission createMission(Long marketId, MissionDtos.MissionCreateRequest request) {
+    // =========================
+    // [1] 가게 미션 등록 (사장/관리자용)
+    // =========================
+    public MissionDtos.MissionResponse createMission(
+            Long marketId,
+            MissionDtos.MissionCreateRequest request
+    ) {
         FoodMarket market = foodMarketRepository.findById(marketId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가게입니다."));
+                .orElseThrow(() -> new MissionException(MissionErrorCode.MARKET_NOT_FOUND));
 
         Mission mission = new Mission();
         mission.setMarket(market);
         mission.setContent(request.content());
         mission.setMissionPoint(request.missionPoint());
 
-        return missionRepository.save(mission);
+        Mission saved = missionRepository.save(mission);
+        return MissionDtos.MissionResponse.from(saved);
     }
 
-
-    @Transactional
-    public List<Mission> getMissionsByMarket(Long marketId) {
+    // =========================
+    // [2] 가게의 미션 리스트 조회
+    // =========================
+    public List<MissionDtos.MissionResponse> getMissionsByMarket(Long marketId) {
         FoodMarket market = foodMarketRepository.findById(marketId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가게입니다."));
+                .orElseThrow(() -> new MissionException(MissionErrorCode.MARKET_NOT_FOUND));
 
+        // MissionRepository에 아래 메서드가 정의되어 있다고 가정:
+        // List<Mission> findByMarket(FoodMarket market);
+        List<Mission> missions = missionRepository.findByMarket(market);
 
-        return missionRepository.findAll().stream()
-                .filter(m -> m.getMarket().equals(market))
+        return missions.stream()
+                .map(MissionDtos.MissionResponse::from)
                 .toList();
     }
 
-
-    @Transactional
-    public MissionUser acceptMission(MissionDtos.AcceptRequest request) {
+    // =========================
+    // [3] 유저가 미션 수락
+    // =========================
+    public MissionDtos.MissionUserResponse acceptMission(MissionDtos.AcceptRequest request) {
         Mission mission = missionRepository.findById(request.missionId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 미션입니다."));
+                .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_FOUND));
 
         Users user = usersRepository.findById(request.userId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new MissionException(MissionErrorCode.USER_NOT_FOUND));
 
+        // 이미 수락/완료한 미션인지 체크
         if (missionUserRepository.existsByMissionAndUser(mission, user)) {
-            throw new IllegalStateException("이미 이 미션을 수락했거나 완료했습니다.");
+            throw new MissionException(MissionErrorCode.MISSION_ALREADY_ACCEPTED);
         }
+
+        // 필요하다면 조건 체크:
+        // if (!canAccept(mission, user)) {
+        //     throw new BusinessException(MissionErrorCode.MISSION_CONDITION_NOT_MET);
+        // }
 
         MissionUser mu = new MissionUser();
         mu.setMission(mission);
         mu.setUser(user);
         mu.setMissionStatus(MissionStatus.ACCEPTED);
 
-        return missionUserRepository.save(mu);
+        MissionUser saved = missionUserRepository.save(mu);
+        return MissionDtos.MissionUserResponse.from(saved);
     }
 
-
-    @Transactional
-    public MissionUser completeMission(MissionDtos.CompleteRequest request) {
+    // =========================
+    // [4] 유저가 미션 완료
+    // =========================
+    public MissionDtos.MissionUserResponse completeMission(MissionDtos.CompleteRequest request) {
         Mission mission = missionRepository.findById(request.missionId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 미션입니다."));
+                .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_FOUND));
 
         Users user = usersRepository.findById(request.userId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new MissionException(MissionErrorCode.USER_NOT_FOUND));
 
         MissionUser mu = missionUserRepository.findByMissionAndUser(mission, user)
-                .orElseThrow(() -> new IllegalStateException("아직 이 미션을 수락하지 않았습니다."));
+                .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_ACCEPTED));
 
         if (mu.getMissionStatus() == MissionStatus.COMPLETED) {
-            throw new IllegalStateException("이미 완료된 미션입니다.");
+            throw new MissionException(MissionErrorCode.MISSION_ALREADY_COMPLETED);
         }
 
-        mu.setMissionStatus(MissionStatus.COMPLETED);;
+        // 완료 조건 체크 필요시:
+        // if (!canComplete(mission, user)) {
+        //     throw new BusinessException(MissionErrorCode.MISSION_CONDITION_NOT_MET);
+        // }
+
+        mu.setMissionStatus(MissionStatus.COMPLETED);
         mu.setContent(request.content());
 
-        return mu;
+        MissionUser updated = missionUserRepository.save(mu);
+        return MissionDtos.MissionUserResponse.from(updated);
+    }
+
+    // =========================
+    // [5] (선택) 유저의 특정 미션 상태 조회
+    // =========================
+    public MissionDtos.MissionUserResponse getMissionUser(Long missionId, Long userId) {
+        Mission mission = missionRepository.findById(missionId)
+                .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_FOUND));
+
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new MissionException(MissionErrorCode.USER_NOT_FOUND));
+
+        MissionUser mu = missionUserRepository.findByMissionAndUser(mission, user)
+                .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_ACCEPTED)
+                );
+
+        return MissionDtos.MissionUserResponse.from(mu);
     }
 }
