@@ -1,3 +1,5 @@
+package com.example.umc9th.domain.mission.dto;
+
 import java.time.LocalDateTime;
 
 public record UserMissionResponse (

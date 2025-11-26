@@ -1,6 +1,5 @@
 package com.example.umc9th.domain.mission.controller;
 
-import com.example.umc9th.domain.mission.service.ReviewService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

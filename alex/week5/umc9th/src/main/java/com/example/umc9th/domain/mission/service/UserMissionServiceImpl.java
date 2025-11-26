@@ -1,16 +1,23 @@
 package com.example.umc9th.domain.mission.service;
 
 import com.example.umc9th.domain.mission.dto.UserMissionResponse;
+import com.example.umc9th.domain.mission.dto.UserMissionRequestCreate;
 import com.example.umc9th.domain.mission.entity.UserMission;
 import com.example.umc9th.domain.mission.repository.MissionRepository;
 import com.example.umc9th.domain.mission.repository.UserMissionRepository;
+import com.example.umc9th.domain.mission.entity.Mission;
 import com.example.umc9th.domain.store.entity.Store;
 import com.example.umc9th.domain.user.entity.User;
 import com.example.umc9th.domain.user.repository.UserRepository;
+import com.example.umc9th.global.apiPayload.exception.GeneralException;
+import com.example.umc9th.global.apiPayload.code.GeneralErrorCode;
 
+import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 import jakarta.transaction.Transactional;
 
-
+@Service
+@RequiredArgsConstructor
 public class UserMissionServiceImpl implements UserMissionService{
     
     private final UserMissionRepository userMissionRepository;
@@ -32,7 +39,8 @@ public class UserMissionServiceImpl implements UserMissionService{
                                              .user(user)
                                              .mission(mission)
                                              .isComplete(request.isComplete())
-                                             .completeAt(request.compeletAt());
+                                             .completeAt(request.completeAt())
+                                             .build();
         
         UserMission saved = userMissionRepository.save(userMission);
 
@@ -40,7 +48,7 @@ public class UserMissionServiceImpl implements UserMissionService{
     }
 
     private UserMissionResponse toResponse(UserMission userMission){
-        return UserMissionResponse(
+        return new UserMissionResponse(
             userMission.getId(),
             userMission.getMission().getId(),
             userMission.getIsComplete(),
