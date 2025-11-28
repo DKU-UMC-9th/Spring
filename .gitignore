@@ -1,0 +1,13 @@
+# IDE / Gradle / OS
+.idea/
+.gradle/
+out/
+build/
+*.iml
+.DS_Store
+
+# Spring Boot 보안 설정 파일
+src/main/resources/application.yml
+src/main/resources/application-secret.yml
+build/resources/main/application.yml
+build/resources/main/application-secret.yml
