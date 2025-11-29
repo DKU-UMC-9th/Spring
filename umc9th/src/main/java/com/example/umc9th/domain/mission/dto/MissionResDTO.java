@@ -3,6 +3,7 @@ package com.example.umc9th.domain.mission.dto;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class MissionResDTO {
 
@@ -37,5 +38,32 @@ public class MissionResDTO {
     public record SuccessDTO(
             Long userMissionId,
             String missionStatus    // 항상 "SUCCESS"
+    ) {}
+
+    // 특정 가게의 미션 단일 DTO
+    @Builder
+    public record StoreMissionDTO(
+            Long missionId,
+            int point,
+            boolean status
+    ) {}
+
+    // 특정 가게의 미션 페이징 DTO
+    @Builder
+    public record StoreMissionPageDTO(
+            List<StoreMissionDTO> contents,
+            int page,
+            int size,
+            long totalElements,
+            int totalPages
+    ) {}
+
+    @Builder
+    public record MyMissionPageDTO(
+            List<MyMissionDTO> contents,
+            int page,
+            int size,
+            long totalElements,
+            int totalPages
     ) {}
 }

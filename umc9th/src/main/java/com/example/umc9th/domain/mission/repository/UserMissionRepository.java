@@ -3,6 +3,8 @@ package com.example.umc9th.domain.mission.repository;
 import com.example.umc9th.domain.member.entity.Member;
 import com.example.umc9th.domain.mission.entity.Mission;
 import com.example.umc9th.domain.mission.entity.UserMission;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -18,4 +20,7 @@ public interface UserMissionRepository extends JpaRepository<UserMission, Long> 
 
     // 미션 성공 처리 시: 해당 회원의 해당 user_mission만 조회
     Optional<UserMission> findByIdAndMemberId(Long id, Long memberId);
+
+    //내가 진행중인 미션 조회
+    Page<UserMission> findByMemberIdAndStatus(Long memberId, boolean status, Pageable pageable);
 }

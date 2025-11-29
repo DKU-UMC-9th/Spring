@@ -17,6 +17,8 @@ import com.example.umc9th.domain.store.repository.StoreRepository;
 import com.querydsl.core.BooleanBuilder;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,18 +31,7 @@ public class ReviewService {
     private final MemberRepository memberRepository;
     private final StoreRepository storeRepository;
 
-    public String queryTest(String name) {
-        QReview review = QReview.review;
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if (name != null) {
-            builder.and(review.member.name.eq(name));
-        }
-
-        List<Review> reviewList = reviewRepository.searchReview(builder);
-        return reviewList.toString();
-    }
-
+    // QueryDSL 검색 테스트
     public List<Review> searchReview(String query, String type) {
         QReview review = QReview.review;
         BooleanBuilder builder = new BooleanBuilder();
@@ -58,28 +49,37 @@ public class ReviewService {
         return reviewRepository.searchReview(builder);
     }
 
-    //미션
-    public List<Review> getMyReviews(long memberId, String storeName, Integer star) {
+    // 9주차 — 내가 작성한 리뷰 조회 (페이징)
+    public ReviewResDTO.MyReviewPageDTO getMyReviews(
+            long memberId,
+            String storeName,
+            Integer star,
+            Pageable pageable
+    ) {
+
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND));
+
         QReview review = QReview.review;
         BooleanBuilder builder = new BooleanBuilder();
 
-        // 로그인 사용자 조건
         builder.and(review.member.id.eq(memberId));
 
-        // 가게명 필터
-        if (storeName != null && !storeName.isEmpty()) {
+        if (storeName != null && !storeName.isBlank()) {
             builder.and(review.store.name.containsIgnoreCase(storeName));
         }
 
-        // 별점 필터
         if (star != null) {
             builder.and(review.star.goe(star));
         }
 
-        return reviewRepository.searchReview(builder);
+        Page<Review> reviewPage =
+                reviewRepository.searchReviewWithPaging(builder, pageable);
+
+        return ReviewConverter.toMyReviewPageDTO(reviewPage);
     }
 
-    //리뷰 생성
+    // 리뷰 생성
     @Transactional
     public ReviewResDTO.CreateDTO createReview(ReviewReqDTO.CreateDTO dto) {
 
@@ -95,4 +95,3 @@ public class ReviewService {
         return ReviewConverter.toCreateDTO(review);
     }
 }
-

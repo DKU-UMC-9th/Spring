@@ -1,7 +1,7 @@
 package com.example.umc9th.domain.mission.repository;
 
-import com.example.umc9th.domain.mission.entity.Mission;
 import com.example.umc9th.domain.mission.dto.HomeMissionDto;
+import com.example.umc9th.domain.mission.entity.Mission;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -34,4 +34,7 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
             @Param("memberId") Long memberId,
             Pageable pageable
     );
+
+    // 특정 가게의 활성 미션 목록 (status = true)
+    Page<Mission> findByStoreIdAndStatusTrue(Long storeId, Pageable pageable);
 }

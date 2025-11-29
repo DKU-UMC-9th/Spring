@@ -4,8 +4,10 @@ import com.example.umc9th.domain.member.entity.Member;
 import com.example.umc9th.domain.mission.dto.MissionResDTO;
 import com.example.umc9th.domain.mission.entity.Mission;
 import com.example.umc9th.domain.mission.entity.UserMission;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class MissionConverter {
 
@@ -44,6 +46,48 @@ public class MissionConverter {
         return MissionResDTO.SuccessDTO.builder()
                 .userMissionId(um.getId())
                 .missionStatus("SUCCESS")
+                .build();
+    }
+
+    // 특정 가게 미션 단일 DTO
+    public static MissionResDTO.StoreMissionDTO toStoreMissionDTO(Mission mission) {
+        return MissionResDTO.StoreMissionDTO.builder()
+                .missionId(mission.getId())
+                .point(mission.getPoint())
+                .status(mission.isStatus())
+                .build();
+    }
+
+    // 특정 가게 미션 페이징 DTO
+    public static MissionResDTO.StoreMissionPageDTO toStoreMissionPageDTO(Page<Mission> missionPage) {
+
+        List<MissionResDTO.StoreMissionDTO> list = missionPage.getContent().stream()
+                .map(MissionConverter::toStoreMissionDTO)
+                .toList();
+
+        return MissionResDTO.StoreMissionPageDTO.builder()
+                .contents(list)
+                .page(missionPage.getNumber() + 1)   // 내부는 0부터, 응답은 1부터
+                .size(missionPage.getSize())
+                .totalElements(missionPage.getTotalElements())
+                .totalPages(missionPage.getTotalPages())
+                .build();
+    }
+
+    public static MissionResDTO.MyMissionPageDTO toMyMissionPageDTO(
+            Page<UserMission> missionPage
+    ) {
+
+        List<MissionResDTO.MyMissionDTO> list = missionPage.getContent().stream()
+                .map(MissionConverter::toMyMissionDTO)
+                .toList();
+
+        return MissionResDTO.MyMissionPageDTO.builder()
+                .contents(list)
+                .page(missionPage.getNumber() + 1)
+                .size(missionPage.getSize())
+                .totalElements(missionPage.getTotalElements())
+                .totalPages(missionPage.getTotalPages())
                 .build();
     }
 }

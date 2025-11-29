@@ -7,11 +7,11 @@ import com.example.umc9th.domain.review.exception.code.ReviewSuccessCode;
 import com.example.umc9th.domain.review.service.ReviewService;
 import com.example.umc9th.global.apiPayload.ApiResponse;
 import com.example.umc9th.global.apiPayload.code.GeneralSuccessCode;
+import com.example.umc9th.global.annotation.PositivePage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -20,29 +20,40 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    //테스트
+    // 테스트 검색
     @GetMapping("/search")
-    public ApiResponse<List<Review>> Search(@RequestParam String query, @RequestParam String type) { //query : "안암동", type:"location"
-        List<Review> reviews = reviewService.searchReview(query, type);
-        return ApiResponse.onSuccess(GeneralSuccessCode.SUCCESS, reviews);
+    public ApiResponse<?> search(@RequestParam String query, @RequestParam String type) {
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.SUCCESS,
+                reviewService.searchReview(query, type)
+        );
     }
 
-    //미션 : 내가 직접 작성한 리뷰 조회 (가게명 / 별점 필터링)
+    // 9주차 미션 — 내가 작성한 리뷰(페이징)(기존 Review 리스트 반환에서 Dto 반황으로 변경)
     @GetMapping("/my")
-    public ApiResponse<List<Review>> My(@RequestParam(required = false) String storeName,    //아무 값도 안 들어올 수 있음
-                           @RequestParam(required = false) Integer star) {
-        long memberId = 1;
-        List<Review> reviews = reviewService.getMyReviews(memberId, storeName, star);
-        return ApiResponse.onSuccess(GeneralSuccessCode.SUCCESS, reviews);
+    public ApiResponse<ReviewResDTO.MyReviewPageDTO> myReviews(
+            @RequestParam(required = false) String storeName,
+            @RequestParam(required = false) Integer star,
+            @PositivePage @RequestParam int page
+    ) {
+        long memberId = 1; // 로그인 생략
 
+        Pageable pageable = PageRequest.of(page - 1, 10);
+
+        ReviewResDTO.MyReviewPageDTO result =
+                reviewService.getMyReviews(memberId, storeName, star, pageable);
+
+        return ApiResponse.onSuccess(GeneralSuccessCode.SUCCESS, result);
     }
 
+    // 리뷰 생성
     @PostMapping
     public ApiResponse<ReviewResDTO.CreateDTO> createReview(
             @RequestBody ReviewReqDTO.CreateDTO dto
-    ){
-        ReviewResDTO.CreateDTO result = reviewService.createReview(dto);
-        return ApiResponse.onSuccess(ReviewSuccessCode.CREATE, result);
+    ) {
+        return ApiResponse.onSuccess(
+                ReviewSuccessCode.CREATE,
+                reviewService.createReview(dto)
+        );
     }
-
 }

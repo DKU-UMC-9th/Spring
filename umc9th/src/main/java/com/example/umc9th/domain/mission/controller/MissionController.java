@@ -47,4 +47,29 @@ public class MissionController {
 
         return ApiResponse.onSuccess(MissionSuccessCode.SUCCESS, result);
     }
+
+    // 특정 가게의 미션 목록 (페이징, 1페이지부터 시작)
+    @GetMapping("/store/{storeId}")
+    public ApiResponse<MissionResDTO.StoreMissionPageDTO> getStoreMissions(
+            @PathVariable Long storeId,
+            @RequestParam(name = "page") int page   // 나중에 @PositivePage 같은 커스텀 어노테이션 붙이면 됨
+    ) {
+        MissionResDTO.StoreMissionPageDTO result =
+                missionService.getStoreMissions(storeId, page);
+
+        return ApiResponse.onSuccess(MissionSuccessCode.OK, result);
+    }
+
+    //내가 진행중인 미션(status = true)만 조회
+    @GetMapping("/my/{memberId}/challenging")
+    public ApiResponse<MissionResDTO.MyMissionPageDTO> getMyChallengingMissions(
+            @PathVariable Long memberId,
+            @RequestParam(name = "page") int page
+    ) {
+        MissionResDTO.MyMissionPageDTO result =
+                missionService.getMyChallengingMissions(memberId, page);
+
+        return ApiResponse.onSuccess(MissionSuccessCode.OK, result);
+    }
+
 }

@@ -14,6 +14,9 @@ import com.example.umc9th.domain.mission.repository.MissionRepository;
 import com.example.umc9th.domain.mission.repository.UserMissionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -81,9 +84,8 @@ public class MissionService {
         UserMission userMission = userMissionRepository.findByIdAndMemberId(userMissionId, memberId)
                 .orElseThrow(() -> new MissionException(MissionErrorCode.USER_MISSION_NOT_FOUND));
 
-        // 이미 성공 상태면 그냥 둠 (idempotent)
+        // 이미 성공 상태면 그대로 응답 (idempotent)
         if (!userMission.isStatus()) {
-            // 이미 SUCCESS 상태 → 그대로 응답
             return MissionConverter.toSuccessDTO(userMission);
         }
 
@@ -91,5 +93,49 @@ public class MissionService {
         userMission.complete();  // status = false
 
         return MissionConverter.toSuccessDTO(userMission);
+    }
+
+    /**
+     * 특정 가게의 미션 목록 (status=true, 활성 미션만, 페이징)
+     */
+    @Transactional
+    public MissionResDTO.StoreMissionPageDTO getStoreMissions(Long storeId, int page) {
+
+        // 프론트는 page 1부터 보낸다 → JPA는 0부터라 -1
+        int pageIndex = Math.max(page - 1, 0);
+
+        PageRequest pageable = PageRequest.of(
+                pageIndex,
+                10,
+                Sort.by(Sort.Direction.DESC, "id")
+        );
+
+        Page<Mission> missionPage =
+                missionRepository.findByStoreIdAndStatusTrue(storeId, pageable);
+
+        return MissionConverter.toStoreMissionPageDTO(missionPage);
+    }
+
+    //내가 진행중인 미션 조회
+    @Transactional
+    public MissionResDTO.MyMissionPageDTO getMyChallengingMissions(Long memberId, int page) {
+
+        // 유저 검증
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND));
+
+        int pageIndex = Math.max(page - 1, 0);
+
+        PageRequest pageable = PageRequest.of(
+                pageIndex,
+                10,
+                Sort.by(Sort.Direction.DESC, "deadline")
+        );
+
+        // 진행중 status = true
+        Page<UserMission> missionPage =
+                userMissionRepository.findByMemberIdAndStatus(memberId, true, pageable);
+
+        return MissionConverter.toMyMissionPageDTO(missionPage);
     }
 }
