@@ -1,0 +1,51 @@
+1
+
+INSERT INTO review (user_id, store_id, star, content)
+VALUES (1, 1, 5, '음 너무 맛있어요..~');
+
+2
+
+SELECT u.name, u.email, u.phone, u.point
+FROM users u
+WHERE u.id = :user_id;
+
+3
+
+SELECT
+um.mission_id,
+m.name         AS mission_name,
+s.name        AS store_name,
+m.point        AS mission_point,
+um.deadline,
+um.status
+FROM user_mission um
+JOIN mission m ON m.id = um.mission_id
+JOIN store   s ON s.id = m.store_id
+WHERE um.user_id = :user_id
+AND um.status IN ('진행중', '성공')
+ORDER BY um.deadline DESC;
+
+4
+수행한 미션 수
+SELECT COUNT(*) AS performed_count
+FROM user_mission um
+WHERE um.user_id = :user_id
+AND um.status = '성공';
+
+지역명 + 아직 참여하지 않은 미션 목록
+SELECT
+:region                          AS region_name,  -- 파라미터로 받은 지역명 그대로 노출
+m.id                            AS mission_id,
+s.name                           AS store_name,
+m.point,
+m.deadline
+FROM mission m
+JOIN store s
+ON s.id = m.store_id
+LEFT JOIN user_mission um
+ON um.mission_id = m.id
+AND um.user_id    = :user_id
+WHERE s.address LIKE CONCAT(:region, '%')   -- Postgres는 (:region || '%')
+AND um.mission_id IS NULL                 -- 아직 참여하지 않은 미션
+ORDER BY m.deadline DESC
+LIMIT :limit OFFSET (:page - 1) * :limit;
