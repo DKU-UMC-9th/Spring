@@ -3,10 +3,12 @@ package com.example.umc9th.global.apiPayload.exception;
 import com.example.umc9th.global.apiPayload.ApiResponse;
 import com.example.umc9th.global.apiPayload.code.BaseErrorCode;
 import com.example.umc9th.global.apiPayload.code.GeneralErrorCode;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 @Slf4j
 @RestControllerAdvice
@@ -32,6 +34,26 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(GeneralErrorCode.BAD_REQUEST.getStatus())
                 .body(ApiResponse.onFailure(GeneralErrorCode.BAD_REQUEST, null));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse<?>> handleConstraintViolation(ConstraintViolationException e) {
+
+        log.warn("[ConstraintViolationException] {}", e.getMessage());
+
+        return ResponseEntity
+                .status(GeneralErrorCode.INVALID_PAGE.getStatus())
+                .body(ApiResponse.onFailure(GeneralErrorCode.INVALID_PAGE, null));
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ApiResponse<?>> handleHandlerMethodValidation(HandlerMethodValidationException e) {
+
+        log.warn("[HandlerMethodValidationException] {}", e.getMessage());
+
+        return ResponseEntity
+                .status(GeneralErrorCode.INVALID_PAGE.getStatus())
+                .body(ApiResponse.onFailure(GeneralErrorCode.INVALID_PAGE, null));
     }
 
     @ExceptionHandler(SecurityException.class)

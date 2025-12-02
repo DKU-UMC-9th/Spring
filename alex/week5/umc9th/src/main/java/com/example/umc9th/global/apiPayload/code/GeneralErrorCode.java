@@ -16,6 +16,14 @@ public enum GeneralErrorCode implements BaseErrorCode {
             "COMMON4001_2",
             "유효하지 않은 데이터입니다."),
 
+    INVALID_PAGE(HttpStatus.BAD_REQUEST,
+            "COMMON400_3",
+            "페이지 번호는 1 이상이어야 합니다."),
+
+    DUPLICATE_MISSION(HttpStatus.BAD_REQUEST,
+            "COMMON400_4",
+            "이미 도전 중인 미션입니다."),
+
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED,
             "COMMON401_1",
             "인증이 필요합니다."),

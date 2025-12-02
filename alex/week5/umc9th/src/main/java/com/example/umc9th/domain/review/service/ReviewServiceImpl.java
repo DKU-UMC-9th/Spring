@@ -7,8 +7,13 @@ import com.example.umc9th.domain.review.dto.ReviewRequestCreate;
 import com.example.umc9th.global.apiPayload.exception.GeneralException;
 import com.example.umc9th.global.apiPayload.code.GeneralErrorCode;
 import com.example.umc9th.domain.review.dto.ReviewResponse;
+import com.example.umc9th.global.common.PageResponse;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
@@ -57,6 +62,17 @@ public class ReviewServiceImpl implements ReviewService{
         return reviews.stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    @Override
+    public PageResponse<ReviewResponse> getMyReviews(Long userId, int page) {
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<Review> reviewPage = reviewRepository.findByUserIdAndDbStatusTrue(userId, pageable);
+
+        Page<ReviewResponse> responsePage = reviewPage.map(this::toResponse);
+
+        return PageResponse.of(responsePage);
     }
 
     private ReviewResponse toResponse(Review review) {
