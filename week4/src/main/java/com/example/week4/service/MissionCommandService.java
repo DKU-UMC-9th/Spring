@@ -5,4 +5,5 @@ import com.example.week4.web.dto.MissionRequestDTO;
 
 public interface MissionCommandService {
     UserMission challengeMission(MissionRequestDTO.ChallengeMissionDto request);
+    void completeMission(Long userId, Long missionId);
 }

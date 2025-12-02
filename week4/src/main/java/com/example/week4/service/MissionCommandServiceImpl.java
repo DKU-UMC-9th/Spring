@@ -37,4 +37,12 @@ public class MissionCommandServiceImpl implements MissionCommandService {
 
         return userMissionRepository.save(userMission);
     }
+
+    @Override
+    @Transactional
+    public void completeMission(Long userId, Long missionId) {
+        UserMission userMission = userMissionRepository.findByUserIdAndMissionId(userId, missionId)
+                .orElseThrow(() -> new RuntimeException("Mission not found or not challenged"));
+        userMission.complete();
+    }
 }

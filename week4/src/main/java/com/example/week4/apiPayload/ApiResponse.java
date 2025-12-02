@@ -25,6 +25,11 @@ public class ApiResponse<T> {
 
     // 성공한 경우 (result 포함)
     public static <T> ApiResponse<T> onSuccess(BaseSuccessCode code, T result) {
-        return new ApiResponse<>(false, code.getCode(), code.getMessage(), result);
+        return new ApiResponse<>(true, code.getCode(), code.getMessage(), result);
+    }
+
+    // 실패한 경우
+    public static <T> ApiResponse<T> onFailure(String code, String message, T data) {
+        return new ApiResponse<>(false, code, message, data);
     }
 }

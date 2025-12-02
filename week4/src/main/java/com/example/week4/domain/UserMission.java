@@ -35,6 +35,10 @@ public class UserMission {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    public void complete() {
+        this.is_complete = true;
+    }
+
     public static class UserMissionId implements Serializable {
         private Long mission;
         private Long user;
