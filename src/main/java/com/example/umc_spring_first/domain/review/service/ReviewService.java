@@ -1,6 +1,8 @@
 package com.example.umc_spring_first.domain.review.service;
 
-import com.example.umc_spring_first.domain.review.dto.ReviewCreateRequest;
+import com.example.umc_spring_first.domain.review.converter.ReviewConverter;
+import com.example.umc_spring_first.domain.review.dto.req.ReviewReqDTO;
+import com.example.umc_spring_first.domain.review.dto.res.ReviewResDTO;
 import com.example.umc_spring_first.domain.review.entity.Review;
 import com.example.umc_spring_first.domain.review.repository.ReviewRepository;
 import com.example.umc_spring_first.domain.store.entity.Store;
@@ -11,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,30 +22,22 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
 
-    public Long createReview(ReviewCreateRequest req) {
+    public ReviewResDTO.CreateReviewResponse createReview(ReviewReqDTO.CreateReviewRequest req) {
 
-        // 로그인 미구현 → 유저 하드코딩
-        Long userId = 1L;
+        Long userId = 1L; // 로그인 미구현 → 하드코딩
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-        Store store = storeRepository.findById(req.getStoreId())
+        Store store = storeRepository.findById(req.storeId())
                 .orElseThrow(() -> new RuntimeException("가게를 찾을 수 없습니다."));
 
-        LocalDateTime now = LocalDateTime.now();
-
-        Review review = Review.builder()
-                .user(user)
-                .store(store)
-                .rating(req.getRating())
-                .content(req.getContent())
-                // .image(req.getImage())  // 필요하면 DTO에 추가해서 사용
-                .createAt(now)
-                .updateAt(now)
-                .build();
+        // ✅ DTO -> Entity 변환은 Converter에 위임
+        Review review = ReviewConverter.toReview(req, user, store);
 
         reviewRepository.save(review);
-        return review.getId();
+
+        // ✅ Entity -> 응답 DTO도 Converter에 위임
+        return ReviewConverter.toCreateReviewRes(review);
     }
 }

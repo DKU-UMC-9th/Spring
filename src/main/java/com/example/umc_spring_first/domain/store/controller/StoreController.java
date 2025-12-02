@@ -13,7 +13,7 @@ public class StoreController {
 
     private final StoreService storeService;
 
-    @PostMapping("/stores")
+    @PostMapping("/stores") //특정 지역에 가게 추가하기 API
     public ResponseEntity<?> addStore(
             @RequestBody StoreCreateRequest req
     ) {
