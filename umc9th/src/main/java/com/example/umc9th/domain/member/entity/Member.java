@@ -1,6 +1,7 @@
 package com.example.umc9th.domain.member.entity;
 
 import com.example.umc9th.domain.member.enums.Gender;
+import com.example.umc9th.domain.member.enums.Role;
 import com.example.umc9th.global.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -30,11 +31,14 @@ public class Member extends BaseEntity {
     @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "phone", nullable = false)
     private String phone;
