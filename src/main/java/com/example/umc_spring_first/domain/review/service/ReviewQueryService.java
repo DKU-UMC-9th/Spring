@@ -21,7 +21,7 @@ public class ReviewQueryService {
 
         var dataPage = reviewRepository.searchReviews(storeId, starBand, pageable);
 
-        // ✅ Converter에서 Page -> ReviewPreviewListDTO로 변환
+        // Converter에서 Page -> ReviewPreviewListDTO로 변환
         return ReviewConverter.toReviewPreviewListDTO(dataPage);
     }
 

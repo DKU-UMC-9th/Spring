@@ -1,31 +1,25 @@
-// src/main/java/com/example/umc_spring_first/domain/mission/converter/MissionConverter.java
 package com.example.umc_spring_first.domain.mission.converter;
 
 import com.example.umc_spring_first.domain.mission.dto.res.MissionResDTO;
+import com.example.umc_spring_first.domain.mission.entity.Mission;
 import org.springframework.data.domain.Page;
 
 public class MissionConverter {
 
-    // 2번: 특정 가게 미션 리스트
-    public static MissionResDTO.StoreMissionPreviewListDTO toStoreMissionListDTO(
-            Page<MissionResDTO.StoreMissionPreviewDTO> page
-    ) {
-        return MissionResDTO.StoreMissionPreviewListDTO.builder()
-                .missionList(page.getContent())   // 이미 DTO라 stream 필요 없음
-                .listSize(page.getSize())
-                .totalPage(page.getTotalPages())
-                .totalElements(page.getTotalElements())
-                .isFirst(page.isFirst())
-                .isLast(page.isLast())
+    // 미션 생성 응답
+    public static MissionResDTO.CreateMissionResponse toCreateMissionResponse(Mission mission) {
+        return MissionResDTO.CreateMissionResponse.builder()
+                .missionId(mission.getId())
+                .createdAt(mission.getCreateAt())
                 .build();
     }
 
-    // 3번: 내가 진행중인 미션 리스트
-    public static MissionResDTO.MyMissionPreviewListDTO toMyMissionListDTO(
-            Page<MissionResDTO.MyMissionPreviewDTO> page
+    // 미션 목록 페이지 -> DTO
+    public static MissionResDTO.MissionPreviewListDTO toMissionPreviewListDTO(
+            Page<MissionResDTO.MissionPreviewDTO> page
     ) {
-        return MissionResDTO.MyMissionPreviewListDTO.builder()
-                .missionList(page.getContent())
+        return MissionResDTO.MissionPreviewListDTO.builder()
+                .missionList(page.getContent().stream().toList()) // Stream 사용
                 .listSize(page.getSize())
                 .totalPage(page.getTotalPages())
                 .totalElements(page.getTotalElements())

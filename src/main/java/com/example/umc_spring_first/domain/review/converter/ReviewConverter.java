@@ -6,13 +6,11 @@ import com.example.umc_spring_first.domain.review.entity.Review;
 import com.example.umc_spring_first.domain.store.entity.Store;
 import com.example.umc_spring_first.domain.user.entity.User;
 import org.springframework.data.domain.Page;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class ReviewConverter {
 
-    // ✅ DTO -> Entity (리뷰 생성용)
+    // DTO -> Entity (리뷰 생성용)
     public static Review toReview(
             ReviewReqDTO.CreateReviewRequest dto,
             User user,
@@ -30,7 +28,7 @@ public class ReviewConverter {
                 .build();
     }
 
-    // ✅ Entity -> 생성 응답 DTO
+    // Entity -> 생성 응답 DTO
     public static ReviewResDTO.CreateReviewResponse toCreateReviewRes(Review review) {
         return ReviewResDTO.CreateReviewResponse.builder()
                 .reviewId(review.getId())
@@ -38,7 +36,7 @@ public class ReviewConverter {
                 .build();
     }
 
-    // ✅ Page<ReviewPreviewDTO> -> ReviewPreviewListDTO (페이징 래핑)
+    // Page<ReviewPreviewDTO> -> ReviewPreviewListDTO (페이징 래핑)
     public static ReviewResDTO.ReviewPreviewListDTO toReviewPreviewListDTO(
             Page<ReviewResDTO.ReviewPreviewDTO> page
     ) {
@@ -50,17 +48,6 @@ public class ReviewConverter {
                 .totalElements(page.getTotalElements())
                 .isFirst(page.isFirst())
                 .isLast(page.isLast())
-                .build();
-    }
-
-    // (참고용) 만약 엔티티에서 직접 리스트를 만들고 싶을 때 쓸 수 있는 버전
-    public static ReviewResDTO.ReviewPreviewDTO toReviewPreviewDTO(Review review) {
-        return ReviewResDTO.ReviewPreviewDTO.builder()
-                .reviewId(review.getId())
-                .storeName(review.getStore().getName())
-                .rating(review.getRating())
-                .content(review.getContent())
-                .createdAt(LocalDate.from(review.getCreateAt()))
                 .build();
     }
 }

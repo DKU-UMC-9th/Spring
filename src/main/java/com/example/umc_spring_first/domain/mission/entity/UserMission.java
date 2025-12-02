@@ -1,6 +1,6 @@
 package com.example.umc_spring_first.domain.mission.entity;
 
-import com.example.umc_spring_first.domain.mission.enums.UserMissionStatus;   // ← 추가
+import com.example.umc_spring_first.domain.mission.enums.UserMissionStatus;
 import com.example.umc_spring_first.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;

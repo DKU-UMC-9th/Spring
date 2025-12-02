@@ -1,4 +1,3 @@
-// src/main/java/com/example/umc_spring_first/domain/mission/exception/code/MissionSuccessCode.java
 package com.example.umc_spring_first.domain.mission.exception.code;
 
 import com.example.umc_spring_first.global.apiPayload.code.BaseSuccessCode;
@@ -13,6 +12,10 @@ public enum MissionSuccessCode implements BaseSuccessCode {
     CREATED(HttpStatus.CREATED,
             "MISSION201_1",
             "성공적으로 미션을 생성했습니다."),
+
+    CHALLENGED(HttpStatus.CREATED,
+            "MISSION201_2",
+            "성공적으로 미션 도전을 등록했습니다."),
 
     FOUND(HttpStatus.OK,
             "MISSION200_1",

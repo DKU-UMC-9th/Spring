@@ -32,12 +32,12 @@ public class ReviewService {
         Store store = storeRepository.findById(req.storeId())
                 .orElseThrow(() -> new RuntimeException("가게를 찾을 수 없습니다."));
 
-        // ✅ DTO -> Entity 변환은 Converter에 위임
+        // DTO -> Entity 변환은 Converter에 위임
         Review review = ReviewConverter.toReview(req, user, store);
 
         reviewRepository.save(review);
 
-        // ✅ Entity -> 응답 DTO도 Converter에 위임
+        // Entity -> 응답 DTO도 Converter에 위임
         return ReviewConverter.toCreateReviewRes(review);
     }
 }

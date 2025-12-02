@@ -1,4 +1,3 @@
-// src/main/java/com/example/umc_spring_first/domain/mission/exception/code/MissionErrorCode.java
 package com.example.umc_spring_first.domain.mission.exception.code;
 
 import com.example.umc_spring_first.global.apiPayload.code.BaseErrorCode;

@@ -6,7 +6,7 @@ import com.example.umc_spring_first.domain.review.exception.code.ReviewSuccessCo
 import com.example.umc_spring_first.domain.review.service.ReviewQueryService;
 import com.example.umc_spring_first.domain.review.service.ReviewService;
 import com.example.umc_spring_first.global.apiPayload.ApiResponse;
-import com.example.umc_spring_first.global.apiPayload.annotation.ValidPage;   // ✅ 추가
+import com.example.umc_spring_first.global.apiPayload.annotation.ValidPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +16,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reviews")
-@Validated   // ✅ @ValidPage 동작하게 해주는 어노테이션
+@Validated   // @ValidPage 동작하게 해주는 어노테이션
 public class ReviewController {
 
     private final ReviewQueryService reviewQueryService;
     private final ReviewService reviewService;
 
-    // --------------------------------------------------------
-    // 1) 전체 리뷰 조회
-    // --------------------------------------------------------
+    // 전체 리뷰 조회
     @Operation(
             summary = "전체 리뷰 조회",
             description = "storeId, 별점(stars) 기준으로 필터링하여 페이지 단위(10개)로 조회합니다."
@@ -37,7 +35,7 @@ public class ReviewController {
     public ApiResponse<ReviewResDTO.ReviewPreviewListDTO> getReviews(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false, name = "stars") Integer starBand,
-            @RequestParam(defaultValue = "1") @ValidPage Integer page   // ✅ 여기
+            @RequestParam(defaultValue = "1") @ValidPage Integer page
     ) {
         return ApiResponse.onSuccess(
                 ReviewSuccessCode.FOUND,
@@ -45,9 +43,7 @@ public class ReviewController {
         );
     }
 
-    // --------------------------------------------------------
-    // 2) 내가 작성한 리뷰 조회
-    // --------------------------------------------------------
+    // 내가 작성한 리뷰 조회
     @Operation(
             summary = "내가 작성한 리뷰 조회",
             description = "로그인 미구현 → userId=1 로 가정하고 내가 작성한 리뷰를 페이지 단위로 조회합니다."
@@ -58,7 +54,7 @@ public class ReviewController {
     })
     @GetMapping("/my")
     public ApiResponse<ReviewResDTO.ReviewPreviewListDTO> getMyReviews(
-            @RequestParam(defaultValue = "1") @ValidPage Integer page   // ✅ 여기
+            @RequestParam(defaultValue = "1") @ValidPage Integer page
     ) {
         return ApiResponse.onSuccess(
                 ReviewSuccessCode.FOUND,
@@ -66,9 +62,7 @@ public class ReviewController {
         );
     }
 
-    // --------------------------------------------------------
-    // 3) 리뷰 생성
-    // --------------------------------------------------------
+    // 리뷰 생성
     @Operation(
             summary = "리뷰 생성",
             description = "별점(rating), 내용(content)을 입력받아 리뷰를 생성합니다."

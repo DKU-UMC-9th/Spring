@@ -1,14 +1,13 @@
-// src/main/java/com/example/umc_spring_first/domain/mission/controller/MissionController.java
 package com.example.umc_spring_first.domain.mission.controller;
 
-import com.example.umc_spring_first.domain.mission.dto.MissionCreateRequest;
+import com.example.umc_spring_first.domain.mission.dto.req.MissionReqDTO;
 import com.example.umc_spring_first.domain.mission.dto.res.MissionResDTO;
 import com.example.umc_spring_first.domain.mission.exception.code.MissionSuccessCode;
 import com.example.umc_spring_first.domain.mission.service.MissionQueryService;
 import com.example.umc_spring_first.domain.mission.service.MissionService;
 import com.example.umc_spring_first.domain.mission.service.UserMissionService;
-import com.example.umc_spring_first.global.apiPayload.annotation.ValidPage;
 import com.example.umc_spring_first.global.apiPayload.ApiResponse;
+import com.example.umc_spring_first.global.apiPayload.annotation.ValidPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +24,7 @@ public class MissionController {
     private final UserMissionService userMissionService;
     private final MissionQueryService missionQueryService;
 
-    // -----------------------------------------------------
-    // 2번: 특정 가게의 미션 목록
-    // -----------------------------------------------------
+    // 특정 가게의 미션 목록
     @Operation(
             summary = "특정 가게의 미션 목록 조회",
             description = "storeId 에 해당하는 가게의 미션을 page 단위(1페이지당 10개)로 조회합니다."
@@ -38,7 +35,7 @@ public class MissionController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "가게 또는 미션을 찾을 수 없습니다.")
     })
     @GetMapping("/stores/{storeId}/missions")
-    public ApiResponse<MissionResDTO.StoreMissionPreviewListDTO> getStoreMissions(
+    public ApiResponse<MissionResDTO.MissionPreviewListDTO> getStoreMissions(
             @PathVariable Long storeId,
             @RequestParam @ValidPage Integer page
     ) {
@@ -48,9 +45,7 @@ public class MissionController {
         );
     }
 
-    // -----------------------------------------------------
-    // 3번: 내가 진행중인 미션 목록
-    // -----------------------------------------------------
+    // 내가 진행중인 미션 목록
     @Operation(
             summary = "내가 진행중인 미션 목록 조회",
             description = "로그인 미구현 → userId=1 로 가정하고, IN_PROGRESS 상태의 미션을 page 단위로 조회합니다."
@@ -60,7 +55,7 @@ public class MissionController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 page 값입니다.")
     })
     @GetMapping("/missions/my")
-    public ApiResponse<MissionResDTO.MyMissionPreviewListDTO> getMyInProgressMissions(
+    public ApiResponse<MissionResDTO.MissionPreviewListDTO> getMyInProgressMissions(
             @RequestParam @ValidPage Integer page
     ) {
         Long userId = 1L; // 로그인 미구현
@@ -71,29 +66,26 @@ public class MissionController {
         );
     }
 
-    // -----------------------------------------------------
-    // 기존: 가게에 미션 추가하기
-    // -----------------------------------------------------
+    // 가게에 미션 추가하기 API
     @Operation(
             summary = "가게에 미션 추가",
-            description = "storeId 에 해당하는 가게에 새로운 미션을 생성합니다."
+            description = "요청 바디에 storeId, point, description 을 담아 새로운 미션을 생성합니다."
     )
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "미션 생성 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "가게를 찾을 수 없습니다.")
     })
-    @PostMapping("/stores/{storeId}/missions")
-    public ApiResponse<Long> addMission(
-            @PathVariable Long storeId,
-            @RequestBody MissionCreateRequest req
+    @PostMapping("/missions")
+    public ApiResponse<MissionResDTO.CreateMissionResponse> createMission(
+            @RequestBody MissionReqDTO.CreateMissionRequest req
     ) {
-        Long id = missionService.addMission(storeId, req);
-        return ApiResponse.onSuccess(MissionSuccessCode.CREATED, id);
+        return ApiResponse.onSuccess(
+                MissionSuccessCode.CREATED,
+                missionService.createMission(req)
+        );
     }
 
-    // -----------------------------------------------------
-    // 기존: 미션 도전하기
-    // -----------------------------------------------------
+    // 미션 도전하기 API
     @Operation(
             summary = "미션 도전하기",
             description = "missionId 에 해당하는 미션을 UserMission에 추가하여 도전 상태로 저장합니다. (userId=1 가정)"

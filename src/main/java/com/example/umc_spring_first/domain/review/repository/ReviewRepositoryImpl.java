@@ -14,11 +14,11 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class ReviewRepositoryImpl implements ReviewQueryDsl {   // 🔹 이름 중요!!
+public class ReviewRepositoryImpl implements ReviewQueryDsl {
 
     private final JPAQueryFactory query;
 
-    // ✅ 전체/필터 리뷰 조회
+    // 전체/필터 리뷰 조회
     @Override
     public Page<ReviewResDTO.ReviewPreviewDTO> searchReviews(
             Long storeId,
@@ -70,7 +70,7 @@ public class ReviewRepositoryImpl implements ReviewQueryDsl {   // 🔹 이름 �
         return new PageImpl<>(content, pageable, total == null ? 0 : total);
     }
 
-    // ✅ 내가 작성한 리뷰만 조회
+    // 내가 작성한 리뷰만 조회
     @Override
     public Page<ReviewResDTO.ReviewPreviewDTO> searchMyReviews(
             Long userId,
