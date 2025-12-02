@@ -4,6 +4,8 @@ import com.example.umc9th.global.apiPayload.ApiResponse;
 import com.example.umc9th.global.apiPayload.code.BaseErrorCode;
 import com.example.umc9th.global.apiPayload.code.GeneralErrorCode;
 import com.example.umc9th.global.apiPayload.exception.GeneralException;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -25,5 +27,19 @@ public class GeneralExceptionAdvice {
         BaseErrorCode code = GeneralErrorCode.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(code.getStatus())
                 .body(ApiResponse.onFailure(code, ex.getMessage()));
+    }
+
+    // @ValidPage 검증이 실패하면 ConstraintViolationException 발생
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse<?>> handleConstraintViolation(ConstraintViolationException e){
+        BaseErrorCode code = GeneralErrorCode.INVALID_PAGE;
+
+        String message = e.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .findFirst()
+                .orElse(code.getMessage());
+
+        return ResponseEntity.status(code.getStatus())
+                .body(ApiResponse.onFailure(code, message));
     }
 }

@@ -39,9 +39,10 @@ public class ReviewResDTO {
 
     @Builder
     public record ReviewPreviewDTO(
+            Long reviewId,
             String ownerNickname,
-            Float score,
-            String body,
+            Float star,
+            String content,
             LocalDate createdAt
     ){}
 }

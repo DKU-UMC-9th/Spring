@@ -38,9 +38,10 @@ public class ReviewConverter {
             Review review
     ){
         return ReviewResDTO.ReviewPreviewDTO.builder()
+                .reviewId(review.getId())
                 .ownerNickname(review.getMember().getNickname())
-                .score(review.getStar())
-                .body(review.getContent())
+                .star(review.getStar())
+                .content(review.getContent())
                 .createdAt(LocalDate.from(review.getCreatedAt()))
                 .build();
     }

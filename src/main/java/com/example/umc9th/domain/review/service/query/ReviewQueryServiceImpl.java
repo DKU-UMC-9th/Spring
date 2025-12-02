@@ -2,6 +2,10 @@ package com.example.umc9th.domain.review.service.query;
 
 import static com.example.umc9th.domain.restaurant.entity.QRegion.region;
 
+import com.example.umc9th.domain.member.entity.Member;
+import com.example.umc9th.domain.member.exception.MemberException;
+import com.example.umc9th.domain.member.exception.code.MemberErrorCode;
+import com.example.umc9th.domain.member.repository.MemberRepository;
 import com.example.umc9th.domain.restaurant.entity.Restaurant;
 import com.example.umc9th.domain.restaurant.exception.RestaurantException;
 import com.example.umc9th.domain.restaurant.exception.code.RestaurantErrorCode;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReviewQueryServiceImpl implements ReviewQueryService{
 
+    private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
     private final RestaurantRepository restaurantRepository;
 
@@ -110,5 +115,23 @@ public class ReviewQueryServiceImpl implements ReviewQueryService{
         return ReviewConverter.toReviewPreviewListDTO(result);
     }
 
+    // 내가 작성한 리뷰 목록
+    @Override
+    public ReviewResDTO.ReviewPreviewListDTO findMyReview(
+            Long memberId,
+            Integer page
+    ){
+        // 유저 존재 여부 검증
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND));
+
+        // 내가 작성한 리뷰 가져오기(Offset 페이징)
+        PageRequest pageRequest = PageRequest.of(page-1, 10);
+        Page<Review> result = reviewRepository.findAllByMember(member, pageRequest);
+
+        // 결과 응답 DTO 변환
+        return ReviewConverter.toReviewPreviewListDTO(result);
+
+    }
 
 }

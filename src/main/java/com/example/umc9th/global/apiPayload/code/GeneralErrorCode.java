@@ -22,6 +22,9 @@ public enum GeneralErrorCode implements BaseErrorCode{
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,
             "COMMON500_1",
             "예기치 않은 서버 에러가 발생했습니다."),
+    INVALID_PAGE(HttpStatus.BAD_REQUEST,
+            "COMMON400_1",
+            "page는 1 이상이어야 합니다."),
     ;
 
     // 각 상수가 가질 속성
