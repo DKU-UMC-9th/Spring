@@ -20,7 +20,7 @@ public class MissionUser extends BaseEntity {
     private Users user;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private MissionStatus missionStatus;
 
     @Column(nullable=false, length=200)

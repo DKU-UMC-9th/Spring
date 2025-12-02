@@ -2,22 +2,21 @@ package com.example.demo.domain.mission.service;
 
 import com.example.demo.domain.member.entity.Users;
 import com.example.demo.domain.member.repository.UsersRepository;
-import com.example.demo.domain.mission.exception.code.MissionErrorCode;
 import com.example.demo.domain.mission.dto.MissionDtos;
 import com.example.demo.domain.mission.entity.Mission;
 import com.example.demo.domain.mission.entity.MissionStatus;
 import com.example.demo.domain.mission.entity.MissionUser;
 import com.example.demo.domain.mission.exception.MissionException;
+import com.example.demo.domain.mission.exception.code.MissionErrorCode;
 import com.example.demo.domain.mission.repository.MissionRepository;
 import com.example.demo.domain.mission.repository.MissionUserRepository;
 import com.example.demo.domain.restruant.entity.FoodMarket;
 import com.example.demo.domain.restruant.entity.FoodMarketRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -49,19 +48,32 @@ public class MissionService {
     }
 
     // =========================
-    // [2] 가게의 미션 리스트 조회
+    // [2] 가게의 미션 리스트 조회 (페이징, 한 페이지 10개)
+    //  - 프론트: page >= 1
+    //  - JPA: 0-based index → page - 1
     // =========================
-    public List<MissionDtos.MissionResponse> getMissionsByMarket(Long marketId) {
+    public MissionDtos.MissionPageResponse getMissionsByMarket(Long marketId, int page) {
         FoodMarket market = foodMarketRepository.findById(marketId)
                 .orElseThrow(() -> new MissionException(MissionErrorCode.MARKET_NOT_FOUND));
 
-        // MissionRepository에 아래 메서드가 정의되어 있다고 가정:
-        // List<Mission> findByMarket(FoodMarket market);
-        List<Mission> missions = missionRepository.findByMarket(market);
+        int pageIndex = page - 1; // 1-based → 0-based 변환
+        PageRequest pageable = PageRequest.of(pageIndex, 10);
 
-        return missions.stream()
-                .map(MissionDtos.MissionResponse::from)
-                .toList();
+        Page<Mission> missions = missionRepository.findByMarket(market, pageable);
+
+        return MissionDtos.MissionPageResponse.builder()
+                .content(
+                        missions.getContent()
+                                .stream()
+                                .map(MissionDtos.MissionResponse::from)
+                                .toList()
+                )
+                .page(page)                       // 1-based 그대로 반환
+                .size(missions.getSize())
+                .totalElements(missions.getTotalElements())
+                .totalPages(missions.getTotalPages())
+                .last(missions.isLast())
+                .build();
     }
 
     // =========================
@@ -78,11 +90,6 @@ public class MissionService {
         if (missionUserRepository.existsByMissionAndUser(mission, user)) {
             throw new MissionException(MissionErrorCode.MISSION_ALREADY_ACCEPTED);
         }
-
-        // 필요하다면 조건 체크:
-        // if (!canAccept(mission, user)) {
-        //     throw new BusinessException(MissionErrorCode.MISSION_CONDITION_NOT_MET);
-        // }
 
         MissionUser mu = new MissionUser();
         mu.setMission(mission);
@@ -110,10 +117,8 @@ public class MissionService {
             throw new MissionException(MissionErrorCode.MISSION_ALREADY_COMPLETED);
         }
 
-        // 완료 조건 체크 필요시:
-        // if (!canComplete(mission, user)) {
-        //     throw new BusinessException(MissionErrorCode.MISSION_CONDITION_NOT_MET);
-        // }
+        // 필요하다면 완료 조건 체크 로직 추가 가능
+        // ...
 
         mu.setMissionStatus(MissionStatus.COMPLETED);
         mu.setContent(request.content());
@@ -133,9 +138,33 @@ public class MissionService {
                 .orElseThrow(() -> new MissionException(MissionErrorCode.USER_NOT_FOUND));
 
         MissionUser mu = missionUserRepository.findByMissionAndUser(mission, user)
-                .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_ACCEPTED)
-                );
+                .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_ACCEPTED));
 
         return MissionDtos.MissionUserResponse.from(mu);
     }
+    public MissionDtos.MyMissionPageResponse getMyMissions(Long userId, int page) {
+
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new MissionException(MissionErrorCode.USER_NOT_FOUND));
+
+        int pageIndex = page - 1;              // 1-based → 0-based
+        PageRequest pageable = PageRequest.of(pageIndex, 10);
+
+        Page<MissionUser> muPage =
+                missionUserRepository.findByUser_IdOrderByUpdatedAtDesc(userId, pageable);
+
+        return MissionDtos.MyMissionPageResponse.builder()
+                .content(
+                        muPage.getContent().stream()
+                                .map(MissionDtos.MyMissionItemResponse::from)
+                                .toList()
+                )
+                .page(page)
+                .size(muPage.getSize())
+                .totalElements(muPage.getTotalElements())
+                .totalPages(muPage.getTotalPages())
+                .last(muPage.isLast())
+                .build();
+    }
+
 }

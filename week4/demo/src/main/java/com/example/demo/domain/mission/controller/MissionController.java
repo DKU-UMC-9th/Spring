@@ -4,12 +4,14 @@ import com.example.demo.domain.mission.exception.code.MissionSuccessCode;
 import com.example.demo.domain.mission.dto.MissionDtos;
 import com.example.demo.domain.mission.service.MissionService;
 import com.example.demo.global.apipayload.response.*;
+import com.example.demo.global.validation.ValidPage;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@Validated
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -33,10 +35,12 @@ public class MissionController {
     // [2] 가게 미션 목록 조회
     // =========================
     @GetMapping("/markets/{marketId}/missions")
-    public ResponseEntity<ApiResponse<List<MissionDtos.MissionResponse>>> getMissionsByMarket(
-            @PathVariable Long marketId
+    public ResponseEntity<ApiResponse<MissionDtos.MissionPageResponse>> getMissionsByMarket(
+            @PathVariable Long marketId,
+            @ValidPage
+            @RequestParam(name = "page", defaultValue = "1") Integer page
     ) {
-        List<MissionDtos.MissionResponse> body = missionService.getMissionsByMarket(marketId);
+        MissionDtos.MissionPageResponse body = missionService.getMissionsByMarket(marketId, page);
         return ApiResponse.success(MissionSuccessCode.MISSION_LIST, body);
     }
 
@@ -62,15 +66,17 @@ public class MissionController {
         return ApiResponse.success(MissionSuccessCode.MISSION_COMPLETED, body);
     }
 
-    // =========================
-    // [5] 유저별 특정 미션 상태 조회
-    // =========================
-    @GetMapping("/missions/{missionId}/users/{userId}")
-    public ResponseEntity<ApiResponse<MissionDtos.MissionUserResponse>> getMissionUser(
-            @PathVariable Long missionId,
-            @PathVariable Long userId
+
+
+    @GetMapping("/users/{userId}/missions")
+    public ResponseEntity<ApiResponse<MissionDtos.MyMissionPageResponse>> getMyMissions(
+            @PathVariable Long userId,
+            @Valid @ValidPage
+            @RequestParam(name = "page", defaultValue = "1") Integer page
     ) {
-        MissionDtos.MissionUserResponse body = missionService.getMissionUser(missionId, userId);
-        return ApiResponse.success(MissionSuccessCode.MISSION_DETAIL, body);
+        MissionDtos.MyMissionPageResponse body =
+                missionService.getMyMissions(userId, page);
+
+        return ApiResponse.success(MissionSuccessCode.MISSION_LIST, body);
     }
 }
