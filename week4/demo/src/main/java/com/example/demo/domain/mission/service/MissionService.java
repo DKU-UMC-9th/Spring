@@ -28,9 +28,6 @@ public class MissionService {
     private final UsersRepository usersRepository;
     private final FoodMarketRepository foodMarketRepository;
 
-    // =========================
-    // [1] 가게 미션 등록 (사장/관리자용)
-    // =========================
     public MissionDtos.MissionResponse createMission(
             Long marketId,
             MissionDtos.MissionCreateRequest request
@@ -47,28 +44,23 @@ public class MissionService {
         return MissionDtos.MissionResponse.from(saved);
     }
 
-    // =========================
-    // [2] 가게의 미션 리스트 조회 (페이징, 한 페이지 10개)
-    //  - 프론트: page >= 1
-    //  - JPA: 0-based index → page - 1
-    // =========================
-    public MissionDtos.MissionPageResponse getMissionsByMarket(Long marketId, int page) {
+    public MissionDtos.PageResponse<MissionDtos.MissionResponse> getMissionsByMarket(Long marketId, int page) {
         FoodMarket market = foodMarketRepository.findById(marketId)
                 .orElseThrow(() -> new MissionException(MissionErrorCode.MARKET_NOT_FOUND));
 
-        int pageIndex = page - 1; // 1-based → 0-based 변환
+        int pageIndex = page - 1;
         PageRequest pageable = PageRequest.of(pageIndex, 10);
 
         Page<Mission> missions = missionRepository.findByMarket(market, pageable);
 
-        return MissionDtos.MissionPageResponse.builder()
+        return MissionDtos.PageResponse.<MissionDtos.MissionResponse>builder()
                 .content(
                         missions.getContent()
                                 .stream()
                                 .map(MissionDtos.MissionResponse::from)
                                 .toList()
                 )
-                .page(page)                       // 1-based 그대로 반환
+                .page(page)
                 .size(missions.getSize())
                 .totalElements(missions.getTotalElements())
                 .totalPages(missions.getTotalPages())
@@ -76,9 +68,6 @@ public class MissionService {
                 .build();
     }
 
-    // =========================
-    // [3] 유저가 미션 수락
-    // =========================
     public MissionDtos.MissionUserResponse acceptMission(MissionDtos.AcceptRequest request) {
         Mission mission = missionRepository.findById(request.missionId())
                 .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_FOUND));
@@ -86,7 +75,6 @@ public class MissionService {
         Users user = usersRepository.findById(request.userId())
                 .orElseThrow(() -> new MissionException(MissionErrorCode.USER_NOT_FOUND));
 
-        // 이미 수락/완료한 미션인지 체크
         if (missionUserRepository.existsByMissionAndUser(mission, user)) {
             throw new MissionException(MissionErrorCode.MISSION_ALREADY_ACCEPTED);
         }
@@ -100,9 +88,6 @@ public class MissionService {
         return MissionDtos.MissionUserResponse.from(saved);
     }
 
-    // =========================
-    // [4] 유저가 미션 완료
-    // =========================
     public MissionDtos.MissionUserResponse completeMission(MissionDtos.CompleteRequest request) {
         Mission mission = missionRepository.findById(request.missionId())
                 .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_FOUND));
@@ -117,9 +102,6 @@ public class MissionService {
             throw new MissionException(MissionErrorCode.MISSION_ALREADY_COMPLETED);
         }
 
-        // 필요하다면 완료 조건 체크 로직 추가 가능
-        // ...
-
         mu.setMissionStatus(MissionStatus.COMPLETED);
         mu.setContent(request.content());
 
@@ -127,9 +109,6 @@ public class MissionService {
         return MissionDtos.MissionUserResponse.from(updated);
     }
 
-    // =========================
-    // [5] (선택) 유저의 특정 미션 상태 조회
-    // =========================
     public MissionDtos.MissionUserResponse getMissionUser(Long missionId, Long userId) {
         Mission mission = missionRepository.findById(missionId)
                 .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_FOUND));
@@ -142,18 +121,19 @@ public class MissionService {
 
         return MissionDtos.MissionUserResponse.from(mu);
     }
-    public MissionDtos.MyMissionPageResponse getMyMissions(Long userId, int page) {
+
+    public MissionDtos.PageResponse<MissionDtos.MyMissionItemResponse> getMyMissions(Long userId, int page) {
 
         Users user = usersRepository.findById(userId)
                 .orElseThrow(() -> new MissionException(MissionErrorCode.USER_NOT_FOUND));
 
-        int pageIndex = page - 1;              // 1-based → 0-based
+        int pageIndex = page - 1;
         PageRequest pageable = PageRequest.of(pageIndex, 10);
 
         Page<MissionUser> muPage =
-                missionUserRepository.findByUser_IdOrderByUpdatedAtDesc(userId, pageable);
+                missionUserRepository.findByUser_IdOrderByUpdatedAtDesc(user.getId(), pageable);
 
-        return MissionDtos.MyMissionPageResponse.builder()
+        return MissionDtos.PageResponse.<MissionDtos.MyMissionItemResponse>builder()
                 .content(
                         muPage.getContent().stream()
                                 .map(MissionDtos.MyMissionItemResponse::from)
@@ -166,5 +146,4 @@ public class MissionService {
                 .last(muPage.isLast())
                 .build();
     }
-
 }

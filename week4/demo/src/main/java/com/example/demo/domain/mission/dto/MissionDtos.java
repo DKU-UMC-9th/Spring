@@ -9,12 +9,24 @@ import java.util.List;
 
 public class MissionDtos {
 
+    // 공통 페이지 응답 DTO (제네릭)
+    @Builder
+    public record PageResponse<T>(
+            List<T> content,
+            int page,
+            int size,
+            long totalElements,
+            int totalPages,
+            boolean last
+    ) {}
+
     @Builder
     public record MissionCreateRequest(
             String content,
             Integer missionPoint
     ) {}
 
+    // 미션 기본 정보 (모든 곳에서 재사용)
     @Builder
     public record MissionResponse(
             Long id,
@@ -34,17 +46,6 @@ public class MissionDtos {
         }
     }
 
-    // 페이징 응답 DTO (10개씩)
-    @Builder
-    public record MissionPageResponse(
-            List<MissionResponse> content,
-            int page,           // 현재 페이지 (1-based)
-            int size,           // 페이지 크기
-            long totalElements, // 전체 개수
-            int totalPages,     // 전체 페이지 수
-            boolean last        // 마지막 페이지 여부
-    ) {}
-
     @Builder
     public record AcceptRequest(
             Long missionId,
@@ -58,10 +59,11 @@ public class MissionDtos {
             String content    // 인증 내용
     ) {}
 
+    // 개별 유저-미션 정보 (상세 조회/accept/complete 응답 등에 사용)
     @Builder
     public record MissionUserResponse(
             Long missionUserId,
-            Long missionId,
+            MissionResponse mission,   // 미션 정보 재사용
             Long userId,
             MissionStatus status,
             String content
@@ -69,44 +71,29 @@ public class MissionDtos {
         public static MissionUserResponse from(MissionUser mu) {
             return MissionUserResponse.builder()
                     .missionUserId(mu.getId())
-                    .missionId(mu.getMission().getId())
+                    .mission(MissionResponse.from(mu.getMission()))
                     .userId(mu.getUser().getId())
                     .status(mu.getMissionStatus())
                     .content(mu.getContent())
                     .build();
         }
     }
+
+    // "내 미션 목록" 한 줄 (리스트용)
     @Builder
     public record MyMissionItemResponse(
             Long missionUserId,
-            Long missionId,
-            Long marketId,
-            String marketName,
-            String missionContent,
-            Integer missionPoint,
-            MissionStatus status
+            MissionResponse mission,   // 동일하게 재사용
+            MissionStatus status,
+            String content
     ) {
         public static MyMissionItemResponse from(MissionUser mu) {
-            Mission mission = mu.getMission();
             return MyMissionItemResponse.builder()
                     .missionUserId(mu.getId())
-                    .missionId(mission.getId())
-                    .marketId(mission.getMarket().getId())
-                    .marketName(mission.getMarket().getName())
-                    .missionContent(mission.getContent())
-                    .missionPoint(mission.getMissionPoint())
+                    .mission(MissionResponse.from(mu.getMission()))
                     .status(mu.getMissionStatus())
+                    .content(mu.getContent())
                     .build();
         }
     }
-    @Builder
-    public record MyMissionPageResponse(
-            List<MyMissionItemResponse> content,
-            int page,
-            int size,
-            long totalElements,
-            int totalPages,
-            boolean last
-    ) {}
-
 }
