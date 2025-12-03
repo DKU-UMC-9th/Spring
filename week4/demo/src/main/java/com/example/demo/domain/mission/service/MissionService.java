@@ -109,18 +109,6 @@ public class MissionService {
         return MissionDtos.MissionUserResponse.from(updated);
     }
 
-    public MissionDtos.MissionUserResponse getMissionUser(Long missionId, Long userId) {
-        Mission mission = missionRepository.findById(missionId)
-                .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_FOUND));
-
-        Users user = usersRepository.findById(userId)
-                .orElseThrow(() -> new MissionException(MissionErrorCode.USER_NOT_FOUND));
-
-        MissionUser mu = missionUserRepository.findByMissionAndUser(mission, user)
-                .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_ACCEPTED));
-
-        return MissionDtos.MissionUserResponse.from(mu);
-    }
 
     public MissionDtos.PageResponse<MissionDtos.MyMissionItemResponse> getMyMissions(Long userId, int page) {
 
