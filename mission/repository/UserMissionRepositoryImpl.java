@@ -1,8 +1,11 @@
 package com.example.umc_spring_first.domain.mission.repository;
 
+import com.example.umc_spring_first.domain.mission.dto.res.MissionResDTO;
+import com.example.umc_spring_first.domain.mission.entity.QMission;
 import com.example.umc_spring_first.domain.mission.entity.QUserMission;
-import com.example.umc_spring_first.domain.mission.entity.UserMission;
 import com.example.umc_spring_first.domain.mission.enums.UserMissionStatus;
+import com.example.umc_spring_first.domain.store.entity.QStore;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -17,17 +20,28 @@ public class UserMissionRepositoryImpl implements UserMissionQueryDsl {
     private final JPAQueryFactory query;
 
     @Override
-    public Page<UserMission> searchMyMissions(
+    public Page<MissionResDTO.MissionPreviewDTO> searchMyMissions(
             Long userId,
             UserMissionStatus status,
             Pageable pageable
     ) {
         QUserMission um = QUserMission.userMission;
+        QMission m = QMission.mission;
+        QStore s = QStore.store;
 
-        // 1) content 생성 (엔티티 반환)
-        List<UserMission> content = query //usermission entity 꺼내옴
-                .select(um)
+        List<MissionResDTO.MissionPreviewDTO> content = query
+                .select(Projections.constructor(
+                        MissionResDTO.MissionPreviewDTO.class,
+                        um.id,
+                        m.point,
+                        s.name,
+                        m.description,
+                        um.status,
+                        um.deadline
+                ))
                 .from(um)
+                .join(um.mission, m)
+                .join(m.store, s)
                 .where(
                         um.user.id.eq(userId),
                         um.status.eq(status)
@@ -37,7 +51,6 @@ public class UserMissionRepositoryImpl implements UserMissionQueryDsl {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        // 2) total count
         Long total = query
                 .select(um.count())
                 .from(um)
@@ -48,8 +61,5 @@ public class UserMissionRepositoryImpl implements UserMissionQueryDsl {
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, total == null ? 0 : total);
-        //QueryDSL을 사용할 때는 직접 페이징 쿼리를 실행하므로
-        //스프링이 자동으로 Page 객체를 만들어주지 않는다. 그래서 우리가 직접 Page 객체를 만들어줘야 한다.
-        //그 역할이 바로 PageImpl 이다.
     }
 }

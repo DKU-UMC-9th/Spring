@@ -62,7 +62,7 @@ public class MissionController {
 
         return ApiResponse.onSuccess(
                 MissionSuccessCode.FOUND,
-                missionQueryService.getMyInProgressMissions(userId, page) //실제로 조회한 미션 목록 데이터
+                missionQueryService.getMyInProgressMissions(userId, page)
         );
     }
 

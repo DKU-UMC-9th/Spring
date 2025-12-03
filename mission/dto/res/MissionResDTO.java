@@ -1,6 +1,5 @@
 package com.example.umc_spring_first.domain.mission.dto.res;
 
-import com.example.umc_spring_first.domain.mission.enums.UserMissionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,11 +30,9 @@ public class MissionResDTO {
 
     @Builder
     public record MissionPreviewDTO(
-            Long userMissionId,
+            Long missionId,
             String storeName,
-            String description,
             Integer point,
-            UserMissionStatus status,
-            LocalDateTime deadline
+            String description
     ) {}
 }

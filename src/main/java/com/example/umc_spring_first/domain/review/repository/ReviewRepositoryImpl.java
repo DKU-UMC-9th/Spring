@@ -1,15 +1,12 @@
 package com.example.umc_spring_first.domain.review.repository;
 
-import com.example.umc_spring_first.domain.review.dto.res.ReviewResDTO;
 import com.example.umc_spring_first.domain.review.entity.QReview;
-import com.example.umc_spring_first.domain.store.entity.QStore;
+import com.example.umc_spring_first.domain.review.entity.Review;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
@@ -18,47 +15,30 @@ public class ReviewRepositoryImpl implements ReviewQueryDsl {
 
     private final JPAQueryFactory query;
 
-    // 전체/필터 리뷰 조회
     @Override
-    public Page<ReviewResDTO.ReviewPreviewDTO> searchReviews(
-            Long storeId,
-            Integer starBand,
-            Pageable pageable
-    ) {
+    public Page<Review> searchReviews(Long storeId, Integer starBand, Pageable pageable) {
         QReview r = QReview.review;
-        QStore s = QStore.store;
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (storeId != null) {
+        if (storeId != null)
             builder.and(r.store.id.eq(storeId));
-        }
 
         if (starBand != null) {
             if (starBand == 5) {
                 builder.and(r.rating.eq(5.0f));
             } else {
-                float low = starBand;
-                float high = starBand + 0.9999f;
-                builder.and(r.rating.between(low, high));
+                builder.and(r.rating.between(starBand, starBand + 0.9999f));
             }
         }
 
-        List<ReviewResDTO.ReviewPreviewDTO> content = query
-                .select(Projections.constructor(
-                        ReviewResDTO.ReviewPreviewDTO.class,
-                        r.id,
-                        s.name,
-                        r.rating,
-                        r.content,
-                        r.createAt   // createdAt: LocalDate 로 받을 거면 이렇게
-                ))
+        List<Review> content = query
+                .select(r)         // Entity 반환
                 .from(r)
-                .join(r.store, s)
                 .where(builder)
+                .orderBy(r.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(r.id.desc())
                 .fetch();
 
         Long total = query
@@ -70,30 +50,17 @@ public class ReviewRepositoryImpl implements ReviewQueryDsl {
         return new PageImpl<>(content, pageable, total == null ? 0 : total);
     }
 
-    // 내가 작성한 리뷰만 조회
     @Override
-    public Page<ReviewResDTO.ReviewPreviewDTO> searchMyReviews(
-            Long userId,
-            Pageable pageable
-    ) {
+    public Page<Review> searchMyReviews(Long userId, Pageable pageable) {
         QReview r = QReview.review;
-        QStore s = QStore.store;
 
-        List<ReviewResDTO.ReviewPreviewDTO> content = query
-                .select(Projections.constructor(
-                        ReviewResDTO.ReviewPreviewDTO.class,
-                        r.id,
-                        s.name,
-                        r.rating,
-                        r.content,
-                        r.createAt
-                ))
+        List<Review> content = query
+                .select(r)      // Entity 반환
                 .from(r)
-                .join(r.store, s)
                 .where(r.user.id.eq(userId))
+                .orderBy(r.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(r.id.desc())
                 .fetch();
 
         Long total = query
@@ -105,3 +72,4 @@ public class ReviewRepositoryImpl implements ReviewQueryDsl {
         return new PageImpl<>(content, pageable, total == null ? 0 : total);
     }
 }
+

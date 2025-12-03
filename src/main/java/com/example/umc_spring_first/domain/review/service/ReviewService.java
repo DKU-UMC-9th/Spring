@@ -24,20 +24,18 @@ public class ReviewService {
 
     public ReviewResDTO.CreateReviewResponse createReview(ReviewReqDTO.CreateReviewRequest req) {
 
-        Long userId = 1L; // 로그인 미구현 → 하드코딩
-
+        Long userId = 1L; // 로그인 미구현
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("유저 없음"));
 
         Store store = storeRepository.findById(req.storeId())
-                .orElseThrow(() -> new RuntimeException("가게를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("가게 없음"));
 
-        // DTO -> Entity 변환은 Converter에 위임
         Review review = ReviewConverter.toReview(req, user, store);
 
         reviewRepository.save(review);
 
-        // Entity -> 응답 DTO도 Converter에 위임
-        return ReviewConverter.toCreateReviewRes(review);
+        return ReviewConverter.toCreateResponse(review);
     }
 }
+

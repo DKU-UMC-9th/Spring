@@ -1,8 +1,6 @@
 package com.example.umc_spring_first.domain.review.dto.res;
 
 import lombok.Builder;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,7 +12,7 @@ public class ReviewResDTO {
             String storeName,
             Float rating,
             String content,
-            LocalDate createdAt
+            LocalDateTime createdAt
     ) {}
 
     @Builder

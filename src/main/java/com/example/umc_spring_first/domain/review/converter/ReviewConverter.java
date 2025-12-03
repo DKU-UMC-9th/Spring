@@ -10,39 +10,38 @@ import java.time.LocalDateTime;
 
 public class ReviewConverter {
 
-    // DTO -> Entity (리뷰 생성용)
-    public static Review toReview(
-            ReviewReqDTO.CreateReviewRequest dto,
-            User user,
-            Store store
-    ) {
+    // DTO → Entity
+    public static Review toReview(ReviewReqDTO.CreateReviewRequest dto, User user, Store store) {
         LocalDateTime now = LocalDateTime.now();
-
         return Review.builder()
                 .user(user)
                 .store(store)
-                .rating(dto.rating())
                 .content(dto.content())
+                .rating(dto.rating())
                 .createAt(now)
                 .updateAt(now)
                 .build();
     }
 
-    // Entity -> 생성 응답 DTO
-    public static ReviewResDTO.CreateReviewResponse toCreateReviewRes(Review review) {
-        return ReviewResDTO.CreateReviewResponse.builder()
-                .reviewId(review.getId())
-                .createdAt(review.getCreateAt())
+    // Entity → PreviewDTO
+    public static ReviewResDTO.ReviewPreviewDTO toPreviewDTO(Review r) {
+        return ReviewResDTO.ReviewPreviewDTO.builder()
+                .reviewId(r.getId())
+                .storeName(r.getStore().getName())
+                .rating(r.getRating())
+                .content(r.getContent())
+                .createdAt(r.getCreateAt())
                 .build();
     }
 
-    // Page<ReviewPreviewDTO> -> ReviewPreviewListDTO (페이징 래핑)
-    public static ReviewResDTO.ReviewPreviewListDTO toReviewPreviewListDTO(
-            Page<ReviewResDTO.ReviewPreviewDTO> page
-    ) {
+    // Page<Entity> → PageDTO
+    public static ReviewResDTO.ReviewPreviewListDTO toPreviewListDTO(Page<Review> page) {
         return ReviewResDTO.ReviewPreviewListDTO.builder()
-                // Converter에서 for문 쓰지 말라고 해서, stream으로 한 번 감싸 줌
-                .reviewList(page.getContent().stream().toList())
+                .reviewList(
+                        page.getContent().stream()
+                                .map(ReviewConverter::toPreviewDTO)
+                                .toList()
+                )
                 .listSize(page.getSize())
                 .totalPage(page.getTotalPages())
                 .totalElements(page.getTotalElements())
@@ -50,4 +49,13 @@ public class ReviewConverter {
                 .isLast(page.isLast())
                 .build();
     }
+
+    // Entity → CreateResponseDTO
+    public static ReviewResDTO.CreateReviewResponse toCreateResponse(Review review) {
+        return ReviewResDTO.CreateReviewResponse.builder()
+                .reviewId(review.getId())
+                .createdAt(review.getCreateAt())
+                .build();
+    }
 }
+
