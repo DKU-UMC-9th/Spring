@@ -1,0 +1,30 @@
+package com.example.umc9th.domain.user.exception.code;
+
+import com.example.umc9th.global.apiPayload.code.BaseErrorCode;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
+@AllArgsConstructor
+public enum UserErrorCode implements BaseErrorCode {
+
+    NOT_FOUND(HttpStatus.NOT_FOUND,
+            "MEMBER404_1",
+            "해당 사용자를 찾지 못했습니다."),
+
+    ALREADY_CHALLENGING(HttpStatus.BAD_REQUEST,
+            "MEMBER400_1",
+            "이미 진행중인 미션입니다."),
+
+
+    INVALID(HttpStatus.BAD_REQUEST,
+            "MEMBER400_2",
+            "유효하지 않은 사용자 정보입니다.")
+    ;
+
+
+    private final HttpStatus status;
+    private final String code;
+    private final String message;
+}
