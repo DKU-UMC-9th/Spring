@@ -4,6 +4,7 @@ import com.example.umc9th.domain.member.enums.Address;
 import com.example.umc9th.domain.member.enums.Gender;
 import com.example.umc9th.domain.member.enums.SocialType;
 import com.example.umc9th.domain.member.enums.Status;
+import com.example.umc9th.global.auth.enums.Role;
 import com.example.umc9th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,8 +48,15 @@ public class Member extends BaseEntity {
     @Column(name = "detail_address", nullable = false)
     private String detailAddress; //상세주소
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true)
     private String email; //이메일
+
+    @Column(name = "password", nullable = false)
+    private String password; //비밀번호
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;  //역할
 
     @Column(name = "phone_number")
     private String phoneNumber; //휴대폰번호
