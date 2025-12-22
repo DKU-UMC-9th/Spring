@@ -6,7 +6,7 @@ import com.example.umc_spring_first.domain.review.exception.code.ReviewSuccessCo
 import com.example.umc_spring_first.domain.review.service.ReviewQueryService;
 import com.example.umc_spring_first.domain.review.service.ReviewService;
 import com.example.umc_spring_first.global.apiPayload.ApiResponse;
-import com.example.umc_spring_first.global.apiPayload.annotation.ValidPage;
+import com.example.umc_spring_first.global.annotation.ValidPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;

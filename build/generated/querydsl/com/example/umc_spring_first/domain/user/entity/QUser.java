@@ -23,25 +23,22 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
+    public final com.example.umc_spring_first.global.entity.QBaseTimeEntity _super = new com.example.umc_spring_first.global.entity.QBaseTimeEntity(this);
+
     public final StringPath address = createString("address");
 
-    public final StringPath birthday = createString("birthday");
+    public final DatePath<java.time.LocalDate> birth = createDate("birth", java.time.LocalDate.class);
 
-    public final DateTimePath<java.time.LocalDateTime> createAt = createDateTime("createAt", java.time.LocalDateTime.class);
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final StringPath email = createString("email");
 
-    public final NumberPath<Integer> gender = createNumber("gender", Integer.class);
+    public final EnumPath<com.example.umc_spring_first.domain.user.enums.Gender> gender = createEnum("gender", com.example.umc_spring_first.domain.user.enums.Gender.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final ListPath<com.example.umc_spring_first.domain.inquiry.entity.Inquiry, com.example.umc_spring_first.domain.inquiry.entity.QInquiry> inquiries = this.<com.example.umc_spring_first.domain.inquiry.entity.Inquiry, com.example.umc_spring_first.domain.inquiry.entity.QInquiry>createList("inquiries", com.example.umc_spring_first.domain.inquiry.entity.Inquiry.class, com.example.umc_spring_first.domain.inquiry.entity.QInquiry.class, PathInits.DIRECT2);
-
     public final StringPath name = createString("name");
-
-    public final StringPath nickname = createString("nickname");
-
-    public final ListPath<com.example.umc_spring_first.domain.notice.entity.Notice, com.example.umc_spring_first.domain.notice.entity.QNotice> notices = this.<com.example.umc_spring_first.domain.notice.entity.Notice, com.example.umc_spring_first.domain.notice.entity.QNotice>createList("notices", com.example.umc_spring_first.domain.notice.entity.Notice.class, com.example.umc_spring_first.domain.notice.entity.QNotice.class, PathInits.DIRECT2);
 
     public final StringPath password = createString("password");
 
@@ -49,9 +46,12 @@ public class QUser extends EntityPathBase<User> {
 
     public final NumberPath<Integer> point = createNumber("point", Integer.class);
 
-    public final ListPath<com.example.umc_spring_first.domain.review.entity.Review, com.example.umc_spring_first.domain.review.entity.QReview> reviews = this.<com.example.umc_spring_first.domain.review.entity.Review, com.example.umc_spring_first.domain.review.entity.QReview>createList("reviews", com.example.umc_spring_first.domain.review.entity.Review.class, com.example.umc_spring_first.domain.review.entity.QReview.class, PathInits.DIRECT2);
+    public final EnumPath<com.example.umc_spring_first.global.auth.enums.Role> role = createEnum("role", com.example.umc_spring_first.global.auth.enums.Role.class);
 
-    public final DateTimePath<java.time.LocalDateTime> updateAt = createDateTime("updateAt", java.time.LocalDateTime.class);
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
+
+    public final ListPath<com.example.umc_spring_first.domain.user.entity.mapping.UserFood, com.example.umc_spring_first.domain.user.entity.mapping.QUserFood> userFoodList = this.<com.example.umc_spring_first.domain.user.entity.mapping.UserFood, com.example.umc_spring_first.domain.user.entity.mapping.QUserFood>createList("userFoodList", com.example.umc_spring_first.domain.user.entity.mapping.UserFood.class, com.example.umc_spring_first.domain.user.entity.mapping.QUserFood.class, PathInits.DIRECT2);
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));

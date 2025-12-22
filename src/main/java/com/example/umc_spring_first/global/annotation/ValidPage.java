@@ -1,5 +1,5 @@
 // package 예시는 global.annotation 밑이라고 가정
-package com.example.umc_spring_first.global.apiPayload.annotation;
+package com.example.umc_spring_first.global.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

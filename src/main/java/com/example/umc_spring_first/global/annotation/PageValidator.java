@@ -1,4 +1,4 @@
-package com.example.umc_spring_first.global.apiPayload.annotation;
+package com.example.umc_spring_first.global.annotation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
